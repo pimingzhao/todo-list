@@ -14,6 +14,7 @@ module.exports = {
     }
   ],
   scopes: ['公共模块', '版本更新'],
+
   allowCustomScopes: true,
   allowBreakingChanges: ['feat', 'fix']
 }
