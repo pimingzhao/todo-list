@@ -1,0 +1,119 @@
+// flex class
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-1 {
+  flex: 1;
+}
+.items-center {
+  align-items: center;
+}
+.items-end {
+  align-items: flex-end;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.white-space-nowrap {
+  white-space: nowrap;
+}
+// overflow
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+}
+.overflow-y-auto {
+  overflow-y: auto;
+}
+// text
+.text-underline {
+  text-decoration: underline;
+}
+// text color
+.text-error {
+  color: #{$color_error};
+}
+.text-warning {
+  color: #{$color_warning};
+}
+.text-success {
+  color: #{$color_success};
+}
+.text-primary {
+  color: #{$color_primary};
+}
+.text-normal {
+  color: #{$color_normal};
+}
+.text-white {
+  color: #{$color_white};
+}
+// text size
+.text-lg {
+  font-size: 18px;
+}
+.text-md {
+  font-size: 16px;
+}
+.text-base {
+  font-size: 14px;
+}
+.text-sm {
+  font-size: 12px;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+// font
+.font-bold {
+  font-weight: bold;
+}
+// width
+.w-full {
+  width: 100%;
+}
+.w-1-12 { width: 8.3333%; }.w-2-12 { width: 16.6667%; }.w-3-12 { width: 25%; }.w-4-12 { width: 33.3333%; }.w-5-12 { width: 41.6667%; }.w-6-12 { width: 50%; }.w-7-12 { width: 58.3333%; }.w-8-12 { width: 66.6667%; }.w-9-12 { width: 75%; }.w-10-12 { width: 83.3333%; }.w-11-12 { width: 91.6667%; }
+.w-1-24 { width: 4.1667%; }.w-2-24 { width: 8.3333%; }.w-3-24 { width: 12.5%; }.w-4-24 { width: 16.6667%; }.w-5-24 { width: 20.8333%; }.w-6-24 { width: 25%; }.w-7-24 { width: 29.1667%; }.w-8-24 { width: 33.3333%; }.w-9-24 { width: 37.5%; }.w-10-24 { width: 41.6667%; }.w-11-24 { width: 45.8333%; }.w-12-24 { width: 50%; }.w-13-24 { width: 54.1667%; }.w-14-24 { width: 58.3333%; }.w-15-24 { width: 62.5%; }.w-16-24 { width: 66.6667%; }.w-17-24 { width: 70.8333%; }.w-18-24 { width: 75%; }.w-19-24 { width: 79.1667%; }.w-20-24 { width: 83.3333%; }.w-21-24 { width: 87.5%; }.w-22-24 { width: 91.6667%; }.w-23-24 { width: 95.8333%; }
+// height
+.h-full {
+  height: 100%;
+}
+// margin
+.margin-x-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+// cursor
+.cursor-pointer {
+  cursor: pointer;
+}
+.border-1 {
+  border-width: 1px;
+}
+.rounded {
+  border-radius: 4px;
+}
+// background color
+.bg-white {
+  background-color: #{$color_white};
+}
+.inline-block {
+  display: inline-block;
+}

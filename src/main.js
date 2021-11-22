@@ -3,7 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-Vue.config.productionTip = false
+import '@/styles/index.scss'
+
+Vue.config.productionTip = false // global css
 
 new Vue({
   router,
