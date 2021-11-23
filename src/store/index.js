@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { getDataDetail, getDataList } from '../utils'
+import { addData, getDataDetail, getDataList, putData } from '../utils'
 import { postTodo } from '@/api/todo'
 
 Vue.use(Vuex)
@@ -32,6 +32,9 @@ export default new Vuex.Store({
     SET_SETTING (state, payload) {
       state.setting = payload
     },
+    SET_UNAME (state, payload) {
+      state.setting.uname = payload
+    },
     SET_ISINIT (state, payload) {
       state.isInit = payload
     }
@@ -41,8 +44,8 @@ export default new Vuex.Store({
       const [todo, todo_type, ui, setting] = await Promise.all([
         getDataList('todo'),
         getDataList('todo_type'),
-        getDataDetail(0, 'ui'),
-        getDataDetail(0, 'setting')
+        getDataDetail(1, 'ui'),
+        getDataDetail(1, 'setting')
       ])
       commit('SET_TODO', todo)
       commit('SET_TODO_TYPE', todo_type)
@@ -58,6 +61,14 @@ export default new Vuex.Store({
       }
       await postTodo(todo)
       commit('PUT_TODO', todo)
+    },
+    async setUname ({ commit, state }, uname) {
+      if (state.setting.id) {
+        await putData({ id: state.setting.id, uname }, 'setting')
+      } else {
+        await addData({ id: 1, uname }, 'setting')
+        commit('SET_UNAME', uname)
+      }
     }
   }
 })
