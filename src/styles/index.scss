@@ -55,3 +55,7 @@ html {
 *:after {
   box-sizing: inherit;
 }
+
+ul li, ol li {
+  list-style: none;
+}

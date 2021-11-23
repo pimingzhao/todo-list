@@ -8,9 +8,9 @@ import '@/styles/index.scss'
 
 import ViewUI from 'view-design'
 import 'view-design/dist/styles/iview.css'
-Vue.use(ViewUI)
 
-// import './permission';
+import './permission'
+Vue.use(ViewUI)
 
 Vue.config.productionTip = false;
 
