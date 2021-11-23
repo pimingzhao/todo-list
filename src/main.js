@@ -2,13 +2,23 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import { createDb } from './utils'
 
 import '@/styles/index.scss'
 
-Vue.config.productionTip = false // global css
+import ViewUI from 'view-design'
+import 'view-design/dist/styles/iview.css'
+Vue.use(ViewUI)
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+// import './permission';
+
+Vue.config.productionTip = false;
+
+(async () => {
+  await createDb()
+  new Vue({
+    router,
+    store,
+    render: h => h(App)
+  }).$mount('#app')
+})()

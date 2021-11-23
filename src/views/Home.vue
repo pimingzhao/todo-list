@@ -1,18 +1,29 @@
+<!--
+ * @Author: pimzh
+ * @Date: 2021-11-22 09:42:44
+ * @LastEditTime: 2021-11-22 21:29:24
+ * @LastEditors: pimzh
+ * @Description:
+-->
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Input placeholder="请输入" v-model="title" />
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
-
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      title: ''
+    }
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.home {
+  padding: 20px;
+}
+</style>
