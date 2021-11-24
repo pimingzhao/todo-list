@@ -1,12 +1,13 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-23 11:27:52
+ * @LastEditTime: 2021-11-24 09:13:59
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="home">
+    <h1>Hi {{ uname }}, what you want to do today?</h1>
     <Input v-focus placeholder="请输入" v-model="title" @on-enter="handleEnter" />
     <ul>
       <li
@@ -23,6 +24,7 @@
 import focus from '@/views/directives/focus'
 import TodoToday from './components/TodoToday'
 import Done from './components/Done'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
@@ -46,6 +48,9 @@ export default {
       ],
       currentComp: 'todo-today'
     }
+  },
+  computed: {
+    ...mapGetters(['uname'])
   },
   methods: {
     async handleEnter () {

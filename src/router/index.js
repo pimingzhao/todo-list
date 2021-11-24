@@ -14,7 +14,7 @@ const routes = [
       {
         path: 'todo',
         name: 'todo',
-        component: () => import('@/views/Home')
+        component: () => import('@/views/Todo')
       },
       {
         path: 'uname',
@@ -24,12 +24,13 @@ const routes = [
     ]
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+    path: '/404',
+    name: 'NotFound',
+    component: () => import('@/views/NotFound')
+  },
+  {
+    path: '*',
+    redirect: '/404'
   }
 ]
 

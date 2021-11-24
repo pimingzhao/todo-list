@@ -13,6 +13,8 @@ router.beforeEach(async (to, from, next) => {
     }
     next('/uname')
     return
+  } else if (to.path === '/uname') {
+    next('/')
   }
   next()
 })

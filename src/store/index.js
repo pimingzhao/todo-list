@@ -1,16 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { addData, getDataDetail, getDataList, putData } from '../utils'
-import { postTodo } from '@/api/todo'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    todo: null,
-    todo_type: null,
-    ui: null,
-    setting: null,
+    todo: [],
+    todo_type: [],
+    ui: {},
+    setting: {},
     isInit: true
   },
   mutations: {
@@ -26,21 +25,31 @@ export default new Vuex.Store({
     SET_TODO_TYPE (state, payload) {
       state.todo_type = payload
     },
+    PUT_TODO_TYPE (state, payload) {
+      if (Array.isArray(payload)) {
+        state.todo_type.push(...payload)
+      } else {
+        state.todo_type.push(payload)
+      }
+    },
     SET_UI (state, payload) {
-      state.ui = payload
+      state.ui = {
+        ...state.ui,
+        ...payload
+      }
     },
     SET_SETTING (state, payload) {
-      state.setting = payload
-    },
-    SET_UNAME (state, payload) {
-      state.setting.uname = payload
+      state.setting = {
+        ...state.setting,
+        ...payload
+      }
     },
     SET_ISINIT (state, payload) {
       state.isInit = payload
     }
   },
   actions: {
-    async setDefaultStore ({ commit }) {
+    async setDefaultStore ({ commit, dispatch }) {
       const [todo, todo_type, ui, setting] = await Promise.all([
         getDataList('todo'),
         getDataList('todo_type'),
@@ -48,10 +57,46 @@ export default new Vuex.Store({
         getDataDetail(1, 'setting')
       ])
       commit('SET_TODO', todo)
-      commit('SET_TODO_TYPE', todo_type)
-      commit('SET_UI', ui)
-      commit('SET_SETTING', setting)
+      if (!ui) {
+        // set default ui
+        await dispatch('setUi', {
+          size: 'default',
+          sizeOption: ['large', 'samll', 'default'],
+          isCircle: true
+        })
+      } else {
+        commit('SET_UI', ui)
+      }
+      if (!setting) {
+        // set default setting
+        await dispatch('setSetting', {
+          id: 1
+        })
+      } else {
+        commit('SET_SETTING', setting)
+      }
+      if (todo_type.length === 0) {
+        // set default todo_type
+        await dispatch('addTodoType', [
+          {
+            id: 0,
+            list: ['default', 'primary', 'dashed', 'text', 'info', 'success', 'warning', 'error']
+          },
+          {
+            id: 1,
+            type: 'primary',
+            ghost: false,
+            shape: undefined
+          }
+        ])
+      } else {
+        commit('SET_TODO_TYPE', todo_type)
+      }
       commit('SET_ISINIT', false)
+    },
+    async addTodoType ({ commit }, todo_type) {
+      await addData(todo_type, 'todo_type')
+      commit('PUT_TODO_TYPE', todo_type)
     },
     async addTodo ({ commit }, title) {
       const todo = {
@@ -59,16 +104,26 @@ export default new Vuex.Store({
         start_time: Date.now(),
         type: 1
       }
-      await postTodo(todo)
+      await addData(todo, 'todo')
       commit('PUT_TODO', todo)
     },
+    async setUi ({ commit }, ui) {
+      await addData(ui, 'ui')
+      commit('SET_UI', ui)
+    },
+    async setSetting ({ commit }, setting) {
+      await addData(setting, 'setting')
+      commit('SET_SETTING', setting)
+    },
     async setUname ({ commit, state }, uname) {
-      if (state.setting.id) {
-        await putData({ id: state.setting.id, uname }, 'setting')
-      } else {
-        await addData({ id: 1, uname }, 'setting')
-        commit('SET_UNAME', uname)
-      }
+      await putData({ id: state.setting.id, uname }, 'setting')
+      commit('SET_SETTING', { uname })
+    }
+  },
+  getters: {
+    uname: state => {
+      console.log('setting', state.setting)
+      return state.setting.uname
     }
   }
 })
