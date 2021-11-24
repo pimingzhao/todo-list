@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     todo: [],
-    todo_type: [],
+    todoType: [],
     ui: {},
     setting: {},
     isInit: true
@@ -23,13 +23,13 @@ export default new Vuex.Store({
       state.todo.push(payload)
     },
     SET_TODO_TYPE (state, payload) {
-      state.todo_type = payload
+      state.todoType = payload
     },
     PUT_TODO_TYPE (state, payload) {
       if (Array.isArray(payload)) {
-        state.todo_type.push(...payload)
+        state.todoType.push(...payload)
       } else {
-        state.todo_type.push(payload)
+        state.todoType.push(payload)
       }
     },
     SET_UI (state, payload) {
@@ -50,9 +50,9 @@ export default new Vuex.Store({
   },
   actions: {
     async setDefaultStore ({ commit, dispatch }) {
-      const [todo, todo_type, ui, setting] = await Promise.all([
+      const [todo, todoType, ui, setting] = await Promise.all([
         getDataList('todo'),
-        getDataList('todo_type'),
+        getDataList('todoType'),
         getDataDetail(1, 'ui'),
         getDataDetail(1, 'setting')
       ])
@@ -75,8 +75,8 @@ export default new Vuex.Store({
       } else {
         commit('SET_SETTING', setting)
       }
-      if (todo_type.length === 0) {
-        // set default todo_type
+      if (todoType.length === 0) {
+        // set default todoType
         await dispatch('addTodoType', [
           {
             id: 0,
@@ -90,13 +90,13 @@ export default new Vuex.Store({
           }
         ])
       } else {
-        commit('SET_TODO_TYPE', todo_type)
+        commit('SET_TODO_TYPE', todoType)
       }
       commit('SET_ISINIT', false)
     },
-    async addTodoType ({ commit }, todo_type) {
-      await addData(todo_type, 'todo_type')
-      commit('PUT_TODO_TYPE', todo_type)
+    async addTodoType ({ commit }, todoType) {
+      await addData(todoType, 'todoType')
+      commit('PUT_TODO_TYPE', todoType)
     },
     async addTodo ({ commit }, title) {
       const todo = {
@@ -121,9 +121,6 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    uname: state => {
-      console.log('setting', state.setting)
-      return state.setting.uname
-    }
+    uname: state => state.setting.uname
   }
 })

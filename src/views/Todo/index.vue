@@ -1,12 +1,12 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-24 09:13:59
+ * @LastEditTime: 2021-11-24 10:06:47
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
-  <div class="home">
+  <div class="todo">
     <h1>Hi {{ uname }}, what you want to do today?</h1>
     <Input v-focus placeholder="请输入" v-model="title" @on-enter="handleEnter" />
     <ul>
@@ -62,8 +62,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.home {
-  padding: 20px;
-}
-
 </style>
