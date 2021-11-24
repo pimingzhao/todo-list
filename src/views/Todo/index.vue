@@ -8,7 +8,7 @@
 <template>
   <div class="todo">
     <h1>Hi {{ uname }}, what you want to do today?</h1>
-    <Input v-focus placeholder="请输入" v-model="title" @on-enter="handleEnter" />
+    <Input v-focus placeholder="请输入" v-model="title" :size="size" @on-enter="handleEnter" />
     <ul>
       <li
         v-for="item in list"
@@ -50,7 +50,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['uname'])
+    ...mapGetters(['uname', 'size'])
   },
   methods: {
     async handleEnter () {

@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-24 10:57:59
+ * @LastEditTime: 2021-11-24 11:04:30
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -53,8 +53,8 @@ export default {
 
 <style lang="scss" scoped>
 .menu {
-  li:not(:last-child) {
-    margin-bottom: 5px;
+  li {
+    line-height: 28px;
   }
 }
 .border {

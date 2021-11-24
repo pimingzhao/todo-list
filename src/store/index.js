@@ -60,9 +60,9 @@ export default new Vuex.Store({
       if (!ui) {
         // set default ui
         await dispatch('setUi', {
+          id: 1,
           size: 'default',
-          sizeOption: ['large', 'samll', 'default'],
-          isCircle: true
+          sizeOption: ['small', 'default', 'large']
         })
       } else {
         commit('SET_UI', ui)
@@ -107,8 +107,12 @@ export default new Vuex.Store({
       await addData(todo, 'todo')
       commit('PUT_TODO', todo)
     },
-    async setUi ({ commit }, ui) {
-      await addData(ui, 'ui')
+    async setUi ({ commit, state }, ui) {
+      if (!ui.id) {
+        await putData({ ...state.ui, ...ui }, 'ui')
+      } else {
+        await addData(ui, 'ui')
+      }
       commit('SET_UI', ui)
     },
     async setSetting ({ commit }, setting) {
@@ -121,6 +125,7 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    uname: state => state.setting.uname
+    uname: state => state.setting.uname,
+    size: state => state.ui.size
   }
 })
