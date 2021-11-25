@@ -1,23 +1,25 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 11:44:47
- * @LastEditTime: 2021-11-24 10:10:42
+ * @LastEditTime: 2021-11-25 11:13:41
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="layout flex flex-col">
     <router-view class="flex-1 container" />
-    <Setting />
+    <modal-type ref="modal" />
+    <Setting @on-modal-show="val => $refs['modal'].handleShow(val)" />
   </div>
 </template>
 
 <script>
 import Setting from './components/Setting'
+import ModalType from './components/ModalType'
 
 export default {
   name: 'Layout',
-  components: { Setting }
+  components: { Setting, ModalType }
 }
 </script>
 

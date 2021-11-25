@@ -1,14 +1,14 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-24 10:06:47
+ * @LastEditTime: 2021-11-24 21:42:59
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="todo">
     <h1>Hi {{ uname }}, what you want to do today?</h1>
-    <Input v-focus placeholder="请输入" v-model="title" :size="size" @on-enter="handleEnter" />
+    <Input v-focus placeholder="请输入" v-model.trim="title" :size="size" @on-enter="handleEnter" />
     <ul>
       <li
         v-for="item in list"
@@ -54,6 +54,10 @@ export default {
   },
   methods: {
     async handleEnter () {
+      if (!this.title) {
+        this.$Message.warning('todo can not be empty')
+        return
+      }
       await this.$store.dispatch('addTodo', this.title)
       this.title = ''
     }

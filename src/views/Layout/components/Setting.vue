@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-24 11:04:30
+ * @LastEditTime: 2021-11-25 11:11:25
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -20,7 +20,7 @@
           >{{ item.label }}</li>
         </ul>
         <div class="border"></div>
-        <component class="content" :is="current"></component>
+        <component class="content" :is="current" v-on="$listeners"></component>
       </div>
     </template>
   </Poptip>
@@ -29,10 +29,11 @@
 <script>
 import Ui from './Ui'
 import TodoType from './TodoType'
+import Namespace from './Namespace'
 
 export default {
   name: 'Setting',
-  components: { Ui, TodoType },
+  components: { Ui, TodoType, Namespace },
   data () {
     return {
       menu: [
@@ -41,8 +42,12 @@ export default {
           value: 'ui'
         },
         {
-          label: '类型',
+          label: '标签',
           value: 'todoType'
+        },
+        {
+          label: '命名空间',
+          value: 'namespace'
         }
       ],
       current: 'ui'
@@ -62,6 +67,7 @@ export default {
   margin: 0 10px;
 }
 .content {
-  min-width: 200px;
+  min-width: 300px;
+  height: 300px;
 }
 </style>

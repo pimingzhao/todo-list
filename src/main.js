@@ -9,8 +9,10 @@ import '@/styles/index.scss'
 import ViewUI from 'view-design'
 import 'view-design/dist/styles/iview.css'
 
+import './components' // 注册全局组件
+
 import './permission'
-Vue.use(ViewUI)
+Vue.use(ViewUI) // 路由拦截
 
 Vue.config.productionTip = false;
 

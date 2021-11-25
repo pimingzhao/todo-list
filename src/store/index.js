@@ -25,12 +25,18 @@ export default new Vuex.Store({
     SET_TODO_TYPE (state, payload) {
       state.todoType = payload
     },
-    PUT_TODO_TYPE (state, payload) {
+    ADD_TODO_TYPE (state, payload) {
       if (Array.isArray(payload)) {
         state.todoType.push(...payload)
       } else {
         state.todoType.push(payload)
       }
+    },
+    EDIT_TODO_TYPE (state, payload) {
+      const finder = state.todoType.find(item => item.id === payload.id)
+      Object.keys(payload).forEach(k => {
+        finder[k] = payload[k]
+      })
     },
     SET_UI (state, payload) {
       state.ui = {
@@ -86,7 +92,9 @@ export default new Vuex.Store({
             id: 1,
             type: 'primary',
             ghost: false,
-            shape: undefined
+            shape: false,
+            label: 'today',
+            sort: 1
           }
         ])
       } else {
@@ -96,7 +104,11 @@ export default new Vuex.Store({
     },
     async addTodoType ({ commit }, todoType) {
       await addData(todoType, 'todoType')
-      commit('PUT_TODO_TYPE', todoType)
+      commit('ADD_TODO_TYPE', todoType)
+    },
+    async editTodoType ({ commit }, todoType) {
+      await putData(todoType, 'todoType')
+      commit('EDIT_TODO_TYPE', todoType)
     },
     async addTodo ({ commit }, title) {
       const todo = {
