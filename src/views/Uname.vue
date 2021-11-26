@@ -28,7 +28,7 @@ export default {
   directives: { focus },
   methods: {
     async handleEnter () {
-      await this.$store.dispatch('setUname', this.uname)
+      await this.$store.dispatch('assignState', { k: 'user', v: { uname: this.uname } })
       this.$router.push('/')
     }
   }

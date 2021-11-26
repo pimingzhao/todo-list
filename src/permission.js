@@ -6,7 +6,7 @@ router.beforeEach(async (to, from, next) => {
     await store.dispatch('setDefaultStore')
   }
   // first step
-  if (!store.state.setting?.uname) {
+  if (!store.getters.uname) {
     if (to.path === '/uname') {
       next()
       return

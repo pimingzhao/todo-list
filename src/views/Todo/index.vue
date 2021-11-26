@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-24 21:42:59
+ * @LastEditTime: 2021-11-26 09:36:02
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -58,7 +58,7 @@ export default {
         this.$Message.warning('todo can not be empty')
         return
       }
-      await this.$store.dispatch('addTodo', this.title)
+      await this.$store.dispatch('addTodo', { title: this.title })
       this.title = ''
     }
   }

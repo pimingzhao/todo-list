@@ -9,28 +9,28 @@ export default new Vuex.Store({
     todo: [],
     todoType: [],
     ui: {},
-    setting: {},
+    user: {},
+    search: [],
+    weather: {},
+    time: {},
     isInit: true
   },
   mutations: {
     SET_STATE (state, payload) {
-      state[payload.name] = payload.value
+      Object.keys(payload).forEach(k => { state[k] = payload[k] })
     },
-    SET_TODO (state, payload) {
-      state.todo = payload
+    PUSH_STATE (state, payload) {
+      Object.keys(payload).forEach(k => { state[k].push(payload[k]) })
     },
-    PUT_TODO (state, payload) {
-      state.todo.push(payload)
-    },
-    SET_TODO_TYPE (state, payload) {
-      state.todoType = payload
-    },
-    ADD_TODO_TYPE (state, payload) {
-      if (Array.isArray(payload)) {
-        state.todoType.push(...payload)
-      } else {
-        state.todoType.push(payload)
-      }
+    ASSIGN_STATE (state, payload) {
+      state[payload.k] = Array.isArray(payload.v)
+        ? [
+          ...state[payload.k],
+          ...payload.v
+        ] : {
+          ...state[payload.k],
+          ...payload.v
+        }
     },
     EDIT_TODO_TYPE (state, payload) {
       const finder = state.todoType.find(item => item.id === payload.id)
@@ -42,48 +42,49 @@ export default new Vuex.Store({
       const i = state.todoType.findIndex(item => item.id === payload)
       i !== -1 && state.todoType.splice(i, 1)
     },
-    SET_UI (state, payload) {
-      state.ui = {
-        ...state.ui,
-        ...payload
-      }
-    },
-    SET_SETTING (state, payload) {
-      state.setting = {
-        ...state.setting,
-        ...payload
-      }
-    },
     SET_ISINIT (state, payload) {
       state.isInit = payload
+    },
+    EDIT_SEARCH (state, payload) {
+      Vue.set(state.search, payload.i, payload.v)
     }
   },
   actions: {
     async setDefaultStore ({ commit, dispatch }) {
-      const [todo, todoType, ui, setting] = await Promise.all([
+      const [todo, todoType, ui, user, search, weather, time] = await Promise.all([
         getDataList('todo'),
         getDataList('todoType'),
         getDataDetail(1, 'ui'),
-        getDataDetail(1, 'setting')
+        getDataDetail(1, 'user'),
+        getDataList('search'),
+        getDataDetail(1, 'weather'),
+        getDataDetail(1, 'time')
       ])
-      commit('SET_TODO', todo)
+      commit('SET_STATE', { todo })
       if (!ui) {
         // set default ui
-        await dispatch('setUi', {
-          id: 1,
-          size: 'default',
-          sizeOption: ['small', 'default', 'large']
+        await dispatch('assignState', {
+          k: 'ui',
+          v: {
+            id: 1,
+            size: 'default',
+            sizeOption: ['small', 'default', 'large'],
+            showSearch: true,
+            showWeather: true,
+            showTime: true
+          }
         })
       } else {
-        commit('SET_UI', ui)
+        commit('SET_STATE', { ui })
       }
-      if (!setting) {
-        // set default setting
-        await dispatch('setSetting', {
-          id: 1
+      if (!user) {
+        // set default user
+        await dispatch('assignState', {
+          k: 'user',
+          v: { id: 1 }
         })
       } else {
-        commit('SET_SETTING', setting)
+        commit('SET_STATE', { user })
       }
       if (todoType.length === 0) {
         // set default todoType
@@ -102,7 +103,49 @@ export default new Vuex.Store({
           }
         ])
       } else {
-        commit('SET_TODO_TYPE', todoType)
+        commit('SET_STATE', { todoType })
+      }
+      if (search.length === 0) {
+        await dispatch('addSearch', [
+          {
+            id: 1,
+            logo: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
+            label: '百度',
+            url: 'https://baidu.com/s?wd=',
+            selected: true
+          },
+          {
+            id: 2,
+            logo: 'https://dlweb.sogoucdn.com/pcsearch/web/index/images/logo_150x58_0192f43.png',
+            label: '搜狗',
+            url: 'https://www.sogou.com/web?query=',
+            selected: false
+          }
+        ])
+      } else {
+        commit('SET_STATE', { search })
+      }
+      if (!weather) {
+        await dispatch('assignState', {
+          k: 'weather',
+          v: {
+            id: 1,
+            url: 'https://baidu.com'
+          }
+        })
+      } else {
+        commit('SET_STATE', { weather })
+      }
+      if (!time) {
+        await dispatch('assignState', {
+          k: 'time',
+          v: {
+            id: 1,
+            format: 'yyyy-MM-dd : HH:mm:ss'
+          }
+        })
+      } else {
+        commit('SET_STATE', { time })
       }
       commit('SET_ISINIT', false)
     },
@@ -110,8 +153,13 @@ export default new Vuex.Store({
       const res = await addData(todoType, 'todoType')
       if (!Array.isArray(res)) {
         todoType.id = res
+        commit('PUSH_STATE', { todoType })
+      } else {
+        commit('ASSIGN_STATE', {
+          k: 'todoType',
+          v: todoType
+        })
       }
-      commit('ADD_TODO_TYPE', todoType)
     },
     async editTodoType ({ commit }, todoType) {
       await putData(todoType, 'todoType')
@@ -121,34 +169,52 @@ export default new Vuex.Store({
       await delData(id, 'todoType')
       commit('DEL_TODO_TYPE', id)
     },
-    async addTodo ({ commit }, title) {
+    async addTodo ({ commit }, { title, type = 1 }) {
       const todo = {
         title,
         start_time: Date.now(),
-        type: 1
+        type
       }
-      await addData(todo, 'todo')
-      commit('PUT_TODO', todo)
+      todo.id = await addData(todo, 'todo')
+      commit('PUSH_STATE', { todo })
     },
-    async setUi ({ commit, state }, ui) {
-      if (!ui.id) {
-        await putData({ ...state.ui, ...ui }, 'ui')
+    async addSearch ({ commit }, search) {
+      const res = await addData(search, 'search')
+      if (!Array.isArray(res)) {
+        search.id = res
+        commit('PUSH_STATE', { search })
       } else {
-        await addData(ui, 'ui')
+        commit('ASSIGN_STATE', {
+          k: 'search',
+          v: search
+        })
       }
-      commit('SET_UI', ui)
     },
-    async setSetting ({ commit }, setting) {
-      await addData(setting, 'setting')
-      commit('SET_SETTING', setting)
+    async setSearch ({ commit, state }, id) {
+      const oldI = state.search.findIndex(item => !!item.selected)
+      const old = { ...state.search[oldI] }
+      old.selected = false
+      const newI = state.search.findIndex(item => item.id === id)
+      const now = { ...state.search[newI] }
+      now.selected = true
+      await Promise.all([
+        putData(old, 'search'),
+        putData(now, 'search')
+      ])
+      commit('EDIT_SEARCH', { i: oldI, v: old })
+      commit('EDIT_SEARCH', { i: newI, v: now })
     },
-    async setUname ({ commit, state }, uname) {
-      await putData({ id: state.setting.id, uname }, 'setting')
-      commit('SET_SETTING', { uname })
+    async assignState ({ commit, state }, { k, v }) {
+      if (!v.id) {
+        await putData({ ...state[k], ...v }, k)
+      } else {
+        await addData(v, k)
+      }
+      commit('ASSIGN_STATE', { k, v })
     }
   },
   getters: {
-    uname: state => state.setting.uname,
+    uname: state => state.user.uname,
     size: state => state.ui.size
   }
 })
