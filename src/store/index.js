@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { addData, getDataDetail, getDataList, putData } from '../utils'
+import { addData, delData, getDataDetail, getDataList, putData } from '../utils'
 
 Vue.use(Vuex)
 
@@ -37,6 +37,10 @@ export default new Vuex.Store({
       Object.keys(payload).forEach(k => {
         finder[k] = payload[k]
       })
+    },
+    DEL_TODO_TYPE (state, payload) {
+      const i = state.todoType.findIndex(item => item.id === payload)
+      i !== -1 && state.todoType.splice(i, 1)
     },
     SET_UI (state, payload) {
       state.ui = {
@@ -103,12 +107,19 @@ export default new Vuex.Store({
       commit('SET_ISINIT', false)
     },
     async addTodoType ({ commit }, todoType) {
-      await addData(todoType, 'todoType')
+      const res = await addData(todoType, 'todoType')
+      if (!Array.isArray(res)) {
+        todoType.id = res
+      }
       commit('ADD_TODO_TYPE', todoType)
     },
     async editTodoType ({ commit }, todoType) {
       await putData(todoType, 'todoType')
       commit('EDIT_TODO_TYPE', todoType)
+    },
+    async delTodoType ({ commit }, { id }) {
+      await delData(id, 'todoType')
+      commit('DEL_TODO_TYPE', id)
     },
     async addTodo ({ commit }, title) {
       const todo = {

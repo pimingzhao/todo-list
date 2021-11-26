@@ -43,6 +43,14 @@ export const deleteDb = (name) => {
   window.indexedDB.deleteDatabase(name)
 }
 
+const asyncAddData = (store, data) => {
+  return new Promise((resolve, reject) => {
+    const request = store.add(data)
+    request.onsuccess = resolve
+    request.onerror = reject
+  })
+}
+
 export const addData = (data, storeName, name) => {
   isNull(name) && (name = baseDb.name)
   isNull(storeName) && (storeName = name)
@@ -53,12 +61,14 @@ export const addData = (data, storeName, name) => {
     const transaction = database[name].db.transaction(storeName, 'readwrite')
     const store = transaction.objectStore(storeName)
     if (Array.isArray(data)) {
-      data.forEach(item => store.add(item))
+      Promise.all(
+        data.map(item => asyncAddData(store, item))
+      ).then(resolve).catch(reject)
     } else {
-      store.add(data)
+      asyncAddData(store, data).then(e => {
+        resolve(e.target.result)
+      }).catch(reject)
     }
-    transaction.oncomplete = resolve
-    transaction.onerror = reject
   })
 }
 

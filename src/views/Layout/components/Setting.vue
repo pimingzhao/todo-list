@@ -1,12 +1,12 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-25 11:11:25
+ * @LastEditTime: 2021-11-25 22:43:58
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
-  <Poptip placement="right-end">
+  <Poptip ref="poptip" placement="right-end">
     <Icon class="cursor-pointer" :size="26" type="md-settings" />
     <template v-slot:content>
       <div class="flex">
@@ -20,7 +20,7 @@
           >{{ item.label }}</li>
         </ul>
         <div class="border"></div>
-        <component class="content" :is="current" v-on="$listeners"></component>
+        <component class="content" :is="current" v-on="$listeners" @hidden-poptip="handleHidden"></component>
       </div>
     </template>
   </Poptip>
@@ -48,9 +48,22 @@ export default {
         {
           label: '命名空间',
           value: 'namespace'
+        },
+        {
+          label: '搜索栏',
+          value: 'Link'
+        },
+        {
+          label: '天气与时间',
+          value: 'weather'
         }
       ],
       current: 'ui'
+    }
+  },
+  methods: {
+    handleHidden () {
+      this.$refs.poptip.$el.querySelector('.ivu-poptip-popper').style.display = 'none'
     }
   }
 }

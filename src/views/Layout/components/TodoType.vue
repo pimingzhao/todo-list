@@ -1,12 +1,12 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 10:54:46
- * @LastEditTime: 2021-11-25 11:55:02
+ * @LastEditTime: 2021-11-25 22:46:20
  * @LastEditors: pimzh
  * @Description: TodoType
 -->
 <template>
-  <div class="table-wrapper overflow-y-auto">
+  <div class="btn-wrapper overflow-y-auto">
     <Poptip
       v-for="(item, i) in menu"
       :key="i"
@@ -22,6 +22,13 @@
       </template>
       <render-button :size="size" :data="item" />
     </Poptip>
+    <Button
+      :size="size"
+      type="primary"
+      shape="circle"
+      icon="md-add"
+      @click="() => {$emit('on-modal-show');$emit('hidden-poptip')}"
+    />
   </div>
 </template>
 
@@ -35,11 +42,14 @@ export default {
       actions: [
         {
           label: '修改',
-          event: item => this.$emit('on-modal-show', item)
+          event: item => {
+            this.$emit('on-modal-show', item)
+            this.$emit('hidden-poptip')
+          }
         },
         {
           label: '删除',
-          event: () => {}
+          event: (item) => this.$store.dispatch('delTodoType', item)
         }
       ]
     }
@@ -61,6 +71,10 @@ export default {
 .ivu-btn {
   margin-right: 8px;
   margin-bottom: 8px;
+}
+.btn-wrapper {
+  max-width: 350px;
+  white-space: normal;
 }
 ::v-deep .ivu-poptip{
   &-popper {

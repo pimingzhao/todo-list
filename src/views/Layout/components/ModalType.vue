@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-25 18:24:18
+ * @LastEditTime: 2021-11-25 22:33:28
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -12,7 +12,7 @@
   >
     <Form ref="form" :model="params" :rules="rules" :label-width="80">
       <FormItem label="名称" prop="label">
-        <Input v-model.trim="params.label" placeholder="请输入" :size="size" />
+        <Input ref="input" v-model.trim="params.label" placeholder="请输入" :size="size" />
       </FormItem>
       <FormItem label="类型" prop="type">
         <RadioGroup v-model="params.type">
@@ -40,8 +40,10 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
+import focus from '@/views/directives/focus'
 export default {
   name: 'ModalType',
+  directives: { focus },
   data () {
     return {
       show: false,
@@ -64,7 +66,7 @@ export default {
       return this.todoType[0]?.list || []
     },
     title () {
-      return this.params.id ? '编辑' : '修改'
+      return this.params.id ? '编辑' : '添加'
     }
   },
   methods: {
@@ -76,6 +78,9 @@ export default {
           ...data
         }
       }
+      this.$nextTick(() => {
+        this.$refs.input.$el.lastElementChild.focus()
+      })
     },
     handleCancel () {
       this.show = false
