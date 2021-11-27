@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 17:31:15
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-26 17:59:27
+ * @LastEditTime: 2021-11-27 09:59:43
  * @Description: file content
 -->
 <template>
@@ -18,9 +18,8 @@
         <Input :value="row.url" :size="size" />
       </template>
       <template v-slot:selected="{row}">
-        <template v-if="row.selected">{{ row.selected.toString() }}</template>
         <i-switch
-          v-else
+          :disabled="row.selected"
           :value="row.selected"
           :size="size"
           @on-change="() => $store.dispatch('setSearch', row.id)"
