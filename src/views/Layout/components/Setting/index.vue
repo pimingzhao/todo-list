@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-25 22:43:58
+ * @LastEditTime: 2021-11-26 17:33:36
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -30,10 +30,12 @@
 import Ui from './Ui'
 import TodoType from './TodoType'
 import Namespace from './Namespace'
+import Link from './Link'
+import Weather from './Weather'
 
 export default {
   name: 'Setting',
-  components: { Ui, TodoType, Namespace },
+  components: { Ui, TodoType, Namespace, Link, Weather },
   data () {
     return {
       menu: [
