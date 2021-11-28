@@ -1,13 +1,13 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 11:43:15
- * @LastEditTime: 2021-11-24 11:54:53
+ * @LastEditTime: 2021-11-27 11:24:30
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="uname">
-    <h1>set your name first!</h1>
+    <h1>set your name first!</h1><br/>
     <Input v-focus v-model="uname" placeholder="请输入" :size="size" @on-enter="handleEnter" />
   </div>
 </template>

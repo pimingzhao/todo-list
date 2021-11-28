@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-26 17:33:36
+ * @LastEditTime: 2021-11-28 22:24:16
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -83,6 +83,6 @@ export default {
 }
 .content {
   min-width: 300px;
-  height: 300px;
+  min-height: 300px;
 }
 </style>
