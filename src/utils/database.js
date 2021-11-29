@@ -5,7 +5,7 @@ const database = Object.create(null)
 const baseDb = {
   name: 'notes',
   version: 1,
-  store: ['todo', 'todoType', 'ui', 'user', 'search', 'weather', 'time']
+  store: ['todo', 'todoType', 'ui', 'user', 'search', 'weather', 'time', 'namespace']
 }
 
 const isHasStore = (name, storeName) => database[name].db.objectStoreNames.contains(storeName)
