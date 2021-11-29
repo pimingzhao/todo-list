@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 17:31:15
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-29 13:42:14
+ * @LastEditTime: 2021-11-29 14:56:54
  * @Description: file content
 -->
 <template>
@@ -81,6 +81,7 @@ export default {
       origin: Object.create(null),
       tableData: [],
       baseData: {
+        id: '',
         label: '',
         logo: '',
         url: '',

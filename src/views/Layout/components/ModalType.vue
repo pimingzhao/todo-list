@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-25 22:33:28
+ * @LastEditTime: 2021-11-29 14:47:36
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -98,7 +98,7 @@ export default {
       this.$refs.form.validate(async valid => {
         if (valid) {
           this.params.id
-            ? await this.$store.dispatch('editTodoType', this.params)
+            ? await this.$store.dispatch('editArrState', { k: 'todoType', v: this.params })
             : await this.$store.dispatch('addTodoType', this.getEmptyParam(this.params))
           this.handleCancel()
         }

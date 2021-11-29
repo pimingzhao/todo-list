@@ -34,7 +34,7 @@ export default new Vuex.Store({
     },
     EDIT_ARR_STATE (state, payload) {
       const finder = state[payload.k].find(item => item.id === payload.v.id)
-      Object.keys(payload).forEach(k => {
+      Object.keys(payload.v).forEach(k => {
         finder[k] = payload.v[k]
       })
     },
@@ -51,14 +51,15 @@ export default new Vuex.Store({
   },
   actions: {
     async setDefaultStore ({ commit, dispatch }) {
-      const [todo, todoType, ui, user, search, weather, time] = await Promise.all([
+      const [todo, todoType, ui, user, search, weather, time, namespace] = await Promise.all([
         getDataList('todo'),
         getDataList('todoType'),
         getDataDetail(1, 'ui'),
         getDataDetail(1, 'user'),
         getDataList('search'),
         getDataDetail(1, 'weather'),
-        getDataDetail(1, 'time')
+        getDataDetail(1, 'time'),
+        getDataList('namespace')
       ])
       commit('SET_STATE', { todo })
       if (!ui) {
@@ -147,6 +148,21 @@ export default new Vuex.Store({
       } else {
         commit('SET_STATE', { time })
       }
+      if (namespace.length === 0) {
+        // set default todoType
+        await dispatch('addTodoType', [
+          {
+            id: 1,
+            label: 'todo-today'
+          },
+          {
+            id: 2,
+            label: 'today'
+          }
+        ])
+      } else {
+        commit('SET_STATE', { namespace })
+      }
       commit('SET_ISINIT', false)
     },
     async addTodoType ({ commit }, todoType) {
@@ -161,19 +177,14 @@ export default new Vuex.Store({
         })
       }
     },
-    async editTodoType ({ commit }, todoType) {
-      await putData(todoType, 'todoType')
-      commit('EDIT_ARR_STATE', { k: 'todoType', v: todoType })
-    },
     async delTodoType ({ commit }, { id }) {
       await delData(id, 'todoType')
       commit('DEL_ARR_STATE', { k: 'todoType', v: id })
     },
-    async addTodo ({ commit }, { title, type = 1 }) {
+    async addTodo ({ commit }, todos) {
       const todo = {
-        title,
         start_time: Date.now(),
-        type
+        ...todos
       }
       todo.id = await addData(todo, 'todo')
       commit('PUSH_STATE', { todo })
@@ -204,15 +215,15 @@ export default new Vuex.Store({
       commit('EDIT_SEARCH', { i: oldI, v: old })
       commit('EDIT_SEARCH', { i: newI, v: now })
     },
-    async editSearch ({ commit }, search) {
+    async editSearch ({ commit, dispatch }, search) {
       if (!search.id) {
+        delete search.id
         const id = await addData(search, 'search')
         search.id = id
         commit('PUSH_STATE', { search })
         return id
       } else {
-        await putData(search)
-        commit('EDIT_ARR_STATE', { k: 'search', v: search })
+        await dispatch('editArrState', { k: 'search', v: search })
       }
     },
     async delSearch ({ commit }, { id }) {
@@ -226,6 +237,10 @@ export default new Vuex.Store({
         await addData(v, k)
       }
       commit('ASSIGN_STATE', { k, v })
+    },
+    async editArrState ({ commit }, { k, v }) {
+      await putData(v, k)
+      commit('EDIT_ARR_STATE', { k, v })
     }
   },
   getters: {

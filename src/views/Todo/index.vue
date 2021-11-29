@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-27 11:24:47
+ * @LastEditTime: 2021-11-29 14:32:50
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -9,44 +9,25 @@
   <div class="todo">
     <h1>Hi {{ uname }}, what you want to do today?</h1><br/>
     <Input v-focus placeholder="请输入" v-model.trim="title" :size="size" @on-enter="handleEnter" />
-    <ul>
-      <li
-        v-for="item in list"
-        :key="item.comp"
-        @click="() => currentComp = item.comp"
-      >{{ item.label }}</li>
-    </ul>
-    <component :is="currentComp" />
+    <todo-today />
+    <!-- todo modal -->
+    <modal-todo ref="todo" />
   </div>
 </template>
 
 <script>
 import focus from '@/views/directives/focus'
 import TodoToday from './components/TodoToday'
-import Done from './components/Done'
+import ModalTodo from './components/ModalTodo'
 import { mapGetters } from 'vuex'
 
 export default {
   name: 'Home',
-  components: {
-    TodoToday,
-    Done
-  },
+  components: { TodoToday, ModalTodo },
   directives: { focus },
   data () {
     return {
-      title: '',
-      list: [
-        {
-          label: 'todo today',
-          comp: 'todo-today'
-        },
-        {
-          label: 'done',
-          comp: 'done'
-        }
-      ],
-      currentComp: 'todo-today'
+      title: ''
     }
   },
   computed: {
@@ -58,8 +39,17 @@ export default {
         this.$Message.warning('todo can not be empty')
         return
       }
-      await this.$store.dispatch('addTodo', { title: this.title })
-      this.title = ''
+      this.$Modal.confirm({
+        title: '是否需要更细致化的定义任务？',
+        onOk: () => {
+          this.$refs.todo.handleShow({ title: this.title })
+          this.title = ''
+        },
+        onCancel: () => {
+          this.$store.dispatch('addTodo', { title: this.title })
+          this.title = ''
+        }
+      })
     }
   }
 }
