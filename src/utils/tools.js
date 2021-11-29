@@ -41,3 +41,22 @@ export const timeFormat = (date, format = 'yyyy-MM-dd HH:mm:ss') => {
     return result
   })
 }
+
+export const deepClone = obj => {
+  if (Array.isArray(obj)) {
+    return obj.map(item => deepClone(item))
+  }
+  if (Object.prototype.toString.call(obj) === '[object Object]') {
+    let newObj
+    if (!obj.prototype) {
+      newObj = {}
+    } else {
+      newObj = Object.create(obj.prototype.constructor)
+    }
+    for (const k in obj) {
+      newObj[k] = obj[k]
+    }
+    return newObj
+  }
+  return obj
+}

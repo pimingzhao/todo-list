@@ -32,15 +32,15 @@ export default new Vuex.Store({
           ...payload.v
         }
     },
-    EDIT_TODO_TYPE (state, payload) {
-      const finder = state.todoType.find(item => item.id === payload.id)
+    EDIT_ARR_STATE (state, payload) {
+      const finder = state[payload.k].find(item => item.id === payload.v.id)
       Object.keys(payload).forEach(k => {
-        finder[k] = payload[k]
+        finder[k] = payload.v[k]
       })
     },
-    DEL_TODO_TYPE (state, payload) {
-      const i = state.todoType.findIndex(item => item.id === payload)
-      i !== -1 && state.todoType.splice(i, 1)
+    DEL_ARR_STATE (state, payload) {
+      const i = state[payload.k].findIndex(item => item.id === payload.v)
+      i !== -1 && state[payload.k].splice(i, 1)
     },
     SET_ISINIT (state, payload) {
       state.isInit = payload
@@ -141,7 +141,7 @@ export default new Vuex.Store({
           k: 'time',
           v: {
             id: 1,
-            format: 'yyyy-MM-dd : HH:mm:ss'
+            format: 'yyyy 年 MM 月 dd 日 星期W HH 时 mm 分 ss 秒'
           }
         })
       } else {
@@ -163,11 +163,11 @@ export default new Vuex.Store({
     },
     async editTodoType ({ commit }, todoType) {
       await putData(todoType, 'todoType')
-      commit('EDIT_TODO_TYPE', todoType)
+      commit('EDIT_ARR_STATE', { k: 'todoType', v: todoType })
     },
     async delTodoType ({ commit }, { id }) {
       await delData(id, 'todoType')
-      commit('DEL_TODO_TYPE', id)
+      commit('DEL_ARR_STATE', { k: 'todoType', v: id })
     },
     async addTodo ({ commit }, { title, type = 1 }) {
       const todo = {
@@ -190,7 +190,7 @@ export default new Vuex.Store({
         })
       }
     },
-    async setSearch ({ commit, state }, id) {
+    async setSearchSelected ({ commit, state }, id) {
       const oldI = state.search.findIndex(item => !!item.selected)
       const old = { ...state.search[oldI] }
       old.selected = false
@@ -203,6 +203,21 @@ export default new Vuex.Store({
       ])
       commit('EDIT_SEARCH', { i: oldI, v: old })
       commit('EDIT_SEARCH', { i: newI, v: now })
+    },
+    async editSearch ({ commit }, search) {
+      if (!search.id) {
+        const id = await addData(search, 'search')
+        search.id = id
+        commit('PUSH_STATE', { search })
+        return id
+      } else {
+        await putData(search)
+        commit('EDIT_ARR_STATE', { k: 'search', v: search })
+      }
+    },
+    async delSearch ({ commit }, { id }) {
+      await delData(id, 'search')
+      commit('DEL_ARR_STATE', { k: 'search', v: id })
     },
     async assignState ({ commit, state }, { k, v }) {
       if (!v.id) {
