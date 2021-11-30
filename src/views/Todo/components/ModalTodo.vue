@@ -2,18 +2,28 @@
  * @Author: pimzh
  * @Date: 2021-11-29 14:13:03
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-29 15:19:04
+ * @LastEditTime: 2021-11-30 14:50:17
  * @Description: file content
 -->
 <template>
   <Modal
     v-model="show"
-    title="编辑任务"
+    :title="title"
     :closable="false"
     :mask-closable="false"
   >
     <Form ref="form" :model="params" :rules="rules" :label-width="80">
       <FormItem label="任务名" prop="title">{{ params.title }}</FormItem>
+      <FormItem label="命名空间" prop="namespace">
+        <Select v-model="params.namespace" clearable>
+          <Option v-for="item in namespace" :key="item.id" :value="item.id">{{ item.label }}</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="标签" prop="tags">
+        <Select v-model="params.tags" clearable multiple>
+          <Option v-for="item in tags" :key="item.id" :value="item.id">{{ item.label }}</Option>
+        </Select>
+      </FormItem>
     </Form>
     <template v-slot:footer>
       <div class="text-right">
@@ -25,21 +35,36 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 export default {
   name: 'ModalTodo',
+  props: {
+    save: {
+      type: Function,
+      default: () => {}
+    }
+  },
   data () {
     return {
       show: false,
       params: {
         id: '',
-        title: ''
+        title: '',
+        namespace: '',
+        tags: []
       },
       rules: {}
     }
   },
   computed: {
-    ...mapGetters(['size'])
+    ...mapState(['namespace']),
+    ...mapGetters(['size']),
+    tags () {
+      return this.$store.state.tags.slice(1)
+    },
+    title () {
+      return !this.params.id ? '添加任务' : '编辑任务'
+    }
   },
   methods: {
     handleShow (params) {
@@ -49,19 +74,10 @@ export default {
       }
       this.show = true
     },
-    getEmptyParam (param) {
-      const data = {
-        ...param
-      }
-      delete data.id
-      return data
-    },
     handleSave () {
       this.$refs.form.validate(async valid => {
         if (valid) {
-          !this.params.id
-            ? await this.$store.dispatch('addTodo', this.getEmptyParam(this.params))
-            : await this.$store.dispatch('editArrState', { k: 'todo', v: this.params })
+          await this.save(this.params)
           this.handleCancel()
         }
       })

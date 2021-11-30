@@ -5,7 +5,10 @@ const database = Object.create(null)
 const baseDb = {
   name: 'notes',
   version: 1,
-  store: ['todo', 'tags', 'ui', 'user', 'search', 'weather', 'time', 'namespace']
+  store: ['todo', 'tags', 'ui', 'user', 'search', 'weather', 'time', 'namespace'],
+  index: {
+    todo: ['namespace', 'tags', 'start_time', 'end_time']
+  }
 }
 
 const isHasStore = (name, storeName) => database[name].db.objectStoreNames.contains(storeName)
@@ -26,7 +29,12 @@ export const createDb = (name, version) => {
       database[name].db = e.target.result
       baseDb.store.forEach(storeName => {
         if (!isHasStore(name, storeName)) {
-          database[name].db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true })
+          const objectStore = database[name].db.createObjectStore(storeName, { keyPath: 'id', autoIncrement: true })
+          if (storeName in baseDb.index) {
+            baseDb.index[storeName].forEach(indexName => {
+              objectStore.createIndex(indexName, indexName, { unique: false })
+            })
+          }
         }
       })
     }

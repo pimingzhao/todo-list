@@ -1,24 +1,26 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 10:47:18
- * @LastEditTime: 2021-11-23 11:16:17
+ * @LastEditTime: 2021-11-30 14:40:20
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <ul>
-    <li v-for="(item, i) in todo" :key="i">
+    <li v-for="(item, i) in data" :key="i">
       {{item.title}}
     </li>
   </ul>
 </template>
 
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'TodoToday',
-  computed: {
-    ...mapState(['todo'])
+  props: {
+    data: {
+      type: Array,
+      default: () => []
+    }
   }
 }
 </script>

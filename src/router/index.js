@@ -17,11 +17,16 @@ const routes = [
         component: () => import('@/views/Todo')
       },
       {
-        path: 'uname',
-        name: 'uname',
-        component: () => import('@/views/Uname')
+        path: 'todolist',
+        name: 'todolist',
+        component: () => import('@/views/TodoList')
       }
     ]
+  },
+  {
+    path: '/uname',
+    name: '/uname',
+    component: () => import('@/views/Uname')
   },
   {
     path: '/404',

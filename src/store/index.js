@@ -6,7 +6,6 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    todo: [],
     tags: [],
     ui: {},
     user: {},
@@ -52,8 +51,7 @@ export default new Vuex.Store({
   },
   actions: {
     async setDefaultStore ({ commit, dispatch }) {
-      const [todo, tags, ui, user, search, weather, time, namespace] = await Promise.all([
-        getDataList('todo'),
+      const [tags, ui, user, search, weather, time, namespace] = await Promise.all([
         getDataList('tags'),
         getDataDetail(1, 'ui'),
         getDataDetail(1, 'user'),
@@ -62,7 +60,6 @@ export default new Vuex.Store({
         getDataDetail(1, 'time'),
         getDataList('namespace')
       ])
-      commit('SET_STATE', { todo })
       if (!ui) {
         // set default ui
         await dispatch('assignState', {
@@ -183,14 +180,6 @@ export default new Vuex.Store({
       await delData(id, 'tags')
       commit('DEL_ARR_STATE', { k: 'tags', v: id })
     },
-    async addTodo ({ commit }, todos) {
-      const todo = {
-        start_time: Date.now(),
-        ...todos
-      }
-      todo.id = await addData(todo, 'todo')
-      commit('PUSH_STATE', { todo })
-    },
     async setSearchSelected ({ commit, state }, id) {
       const oldI = state.search.findIndex(item => !!item.selected)
       const old = { ...state.search[oldI] }
@@ -255,6 +244,16 @@ export default new Vuex.Store({
   },
   getters: {
     uname: state => state.user.uname,
-    size: state => state.ui.size
+    size: state => state.ui.size,
+    namespaceMap: state => {
+      const obj = Object.create(null)
+      state.namespace.forEach(item => { obj[item.id] = item })
+      return obj
+    },
+    tagsMap: state => {
+      const obj = Object.create(null)
+      state.tags.forEach(item => { obj[item.id] = item })
+      return obj
+    }
   }
 })

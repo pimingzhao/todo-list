@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-30 11:53:26
+ * @LastEditTime: 2021-11-30 13:17:45
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 import focus from '@/views/directives/focus'
 export default {
   name: 'ModalType',
@@ -70,10 +70,9 @@ export default {
     }
   },
   computed: {
-    ...mapState(['tags']),
     ...mapGetters(['size']),
     setting () {
-      return this.tags[0] || {}
+      return this.$store.state.tags[0] || {}
     },
     todoTypes () {
       return this.setting.type || []
