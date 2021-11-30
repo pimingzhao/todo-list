@@ -13,6 +13,7 @@ export default new Vuex.Store({
     search: [],
     weather: {},
     time: {},
+    namespace: [],
     isInit: true
   },
   mutations: {
@@ -89,40 +90,46 @@ export default new Vuex.Store({
       }
       if (todoType.length === 0) {
         // set default todoType
-        await dispatch('addTodoType', [
-          {
-            id: 0,
-            list: ['default', 'primary', 'dashed', 'text', 'info', 'success', 'warning', 'error']
-          },
-          {
-            id: 1,
-            type: 'primary',
-            ghost: false,
-            shape: false,
-            label: 'today',
-            sort: 1
-          }
-        ])
+        await dispatch('addArrState', {
+          k: 'todoType',
+          v: [
+            {
+              id: 0,
+              list: ['default', 'primary', 'dashed', 'text', 'info', 'success', 'warning', 'error']
+            },
+            {
+              id: 1,
+              type: 'primary',
+              ghost: false,
+              shape: false,
+              label: 'today',
+              sort: 1
+            }
+          ]
+        })
       } else {
         commit('SET_STATE', { todoType })
       }
       if (search.length === 0) {
-        await dispatch('addSearch', [
-          {
-            id: 1,
-            logo: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
-            label: '百度',
-            url: 'https://baidu.com/s?wd=',
-            selected: true
-          },
-          {
-            id: 2,
-            logo: 'https://dlweb.sogoucdn.com/pcsearch/web/index/images/logo_150x58_0192f43.png',
-            label: '搜狗',
-            url: 'https://www.sogou.com/web?query=',
-            selected: false
-          }
-        ])
+        await dispatch('addArrState', {
+          k: 'search',
+          v: [
+            {
+              id: 1,
+              logo: 'https://www.baidu.com/img/flexible/logo/pc/result.png',
+              label: '百度',
+              url: 'https://baidu.com/s?wd=',
+              selected: true
+            },
+            {
+              id: 2,
+              logo: 'https://dlweb.sogoucdn.com/pcsearch/web/index/images/logo_150x58_0192f43.png',
+              label: '搜狗',
+              url: 'https://www.sogou.com/web?query=',
+              selected: false
+            }
+          ]
+        })
       } else {
         commit('SET_STATE', { search })
       }
@@ -149,33 +156,26 @@ export default new Vuex.Store({
         commit('SET_STATE', { time })
       }
       if (namespace.length === 0) {
-        // set default todoType
-        await dispatch('addTodoType', [
-          {
-            id: 1,
-            label: 'todo-today'
-          },
-          {
-            id: 2,
-            label: 'today'
-          }
-        ])
+        // set default namespace
+        await dispatch('addArrState', {
+          k: 'namespace',
+          v: [
+            {
+              id: 1,
+              label: 'todo-today',
+              show: true
+            },
+            {
+              id: 2,
+              label: 'done',
+              show: true
+            }
+          ]
+        })
       } else {
         commit('SET_STATE', { namespace })
       }
       commit('SET_ISINIT', false)
-    },
-    async addTodoType ({ commit }, todoType) {
-      const res = await addData(todoType, 'todoType')
-      if (!Array.isArray(res)) {
-        todoType.id = res
-        commit('PUSH_STATE', { todoType })
-      } else {
-        commit('ASSIGN_STATE', {
-          k: 'todoType',
-          v: todoType
-        })
-      }
     },
     async delTodoType ({ commit }, { id }) {
       await delData(id, 'todoType')
@@ -188,18 +188,6 @@ export default new Vuex.Store({
       }
       todo.id = await addData(todo, 'todo')
       commit('PUSH_STATE', { todo })
-    },
-    async addSearch ({ commit }, search) {
-      const res = await addData(search, 'search')
-      if (!Array.isArray(res)) {
-        search.id = res
-        commit('PUSH_STATE', { search })
-      } else {
-        commit('ASSIGN_STATE', {
-          k: 'search',
-          v: search
-        })
-      }
     },
     async setSearchSelected ({ commit, state }, id) {
       const oldI = state.search.findIndex(item => !!item.selected)
@@ -226,9 +214,16 @@ export default new Vuex.Store({
         await dispatch('editArrState', { k: 'search', v: search })
       }
     },
-    async delSearch ({ commit }, { id }) {
-      await delData(id, 'search')
-      commit('DEL_ARR_STATE', { k: 'search', v: id })
+    async editNamespace ({ commit, dispatch }, namespace) {
+      if (!namespace.id) {
+        delete namespace.id
+        const id = await addData(namespace, 'namespace')
+        namespace.id = id
+        commit('PUSH_STATE', { namespace })
+        return id
+      } else {
+        await dispatch('editArrState', { k: 'namespace', v: namespace })
+      }
     },
     async assignState ({ commit, state }, { k, v }) {
       if (!v.id) {
@@ -241,6 +236,19 @@ export default new Vuex.Store({
     async editArrState ({ commit }, { k, v }) {
       await putData(v, k)
       commit('EDIT_ARR_STATE', { k, v })
+    },
+    async addArrState ({ commit }, { k, v }) {
+      const res = await addData(v, k)
+      if (!Array.isArray(res)) {
+        v.id = res
+        commit('PUSH_STATE', { [k]: v })
+      } else {
+        commit('ASSIGN_STATE', { k, v })
+      }
+    },
+    async delArrState ({ commit }, { k, v }) {
+      await delData(v, k)
+      commit('DEL_ARR_STATE', { k, v })
     }
   },
   getters: {

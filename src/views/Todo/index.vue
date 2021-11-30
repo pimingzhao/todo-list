@@ -1,13 +1,13 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-29 14:32:50
+ * @LastEditTime: 2021-11-30 10:53:21
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="todo">
-    <h1>Hi {{ uname }}, what you want to do today?</h1><br/>
+    <h1>Hi <Input ref="uname" v-if="isEdit" v-model="username" style="width: 120px;" class="uname" :size="size" @on-blur="editName" @on-enter="editName" /><span v-else @dblclick="handleDbClick">{{ uname }}</span>, what you want to do today?</h1><br/>
     <Input v-focus placeholder="请输入" v-model.trim="title" :size="size" @on-enter="handleEnter" />
     <todo-today />
     <!-- todo modal -->
@@ -27,7 +27,9 @@ export default {
   directives: { focus },
   data () {
     return {
-      title: ''
+      title: '',
+      isEdit: false,
+      username: ''
     }
   },
   computed: {
@@ -50,10 +52,35 @@ export default {
           this.title = ''
         }
       })
+    },
+    handleDbClick () {
+      this.isEdit = true
+      this.username = this.uname
+      this.$nextTick(() => {
+        this.$refs.uname.$el.lastElementChild.focus()
+      })
+    },
+    async editName () {
+      if (!this.username) {
+        this.$Message.warning('名称不能为空！')
+        return
+      }
+      await this.$store.dispatch('assignState', { k: 'user', v: { uname: this.username } })
+      this.isEdit = false
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.todo {
+  ::v-deep .uname .ivu-input {
+    border-style: hidden hidden solid;
+    border-radius: unset;
+    &:focus, &:active {
+      border-style: hidden hidden solid;
+      box-shadow: none;
+    }
+  }
+}
 </style>

@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 17:31:15
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-29 14:56:54
+ * @LastEditTime: 2021-11-30 10:01:26
  * @Description: file content
 -->
 <template>
@@ -113,8 +113,8 @@ export default {
       this.origin[index] = { ...row }
       this.$set(this.tableData[index], 'isEdit', true)
     },
-    async handleDel (row, index) {
-      await this.$store.dispatch('delSearch', row)
+    async handleDel ({ id }, index) {
+      await this.$store.dispatch('delArrState', { k: 'search', v: id })
       this.tableData.splice(index, 1)
     },
     async handleSave (row, index) {
