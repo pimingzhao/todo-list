@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-30 11:06:47
+ * @LastEditTime: 2021-11-30 11:53:26
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -19,14 +19,23 @@
           <Radio v-for="(item, i) in todoTypes" :key="i" :label="item"></Radio>
         </RadioGroup>
       </FormItem>
-      <FormItem label="开启圆角" prop="shape">
-        <i-switch v-model="params.shape" :size="size" />
+      <FormItem label="颜色" prop="color">
+        <RadioGroup v-model="colorType">
+          <Radio label="system">系统</Radio>
+          <Radio label="custom">自定义</Radio>
+        </RadioGroup><br/>
+        <RadioGroup v-if="colorType === 'system'" v-model="params.color">
+          <Radio v-for="(item, i) in colors" :key="i" :label="item"></Radio>
+        </RadioGroup>
+        <ColorPicker v-else v-model="params.color" alpha />
       </FormItem>
-      <FormItem label="背景透明" prop="ghost">
-        <i-switch v-model="params.ghost" :size="size" />
+      <FormItem label="大小" prop="size">
+        <RadioGroup v-model="params.size">
+          <Radio v-for="(item, i) in sizes" :key="i" :label="item"></Radio>
+        </RadioGroup>
       </FormItem>
       <FormItem label="效果预览">
-        <render-button :size="size" :data="params" />
+        <render-tag :data="params" />
       </FormItem>
     </Form>
     <template v-slot:footer>
@@ -50,10 +59,11 @@ export default {
       params: {
         id: '',
         label: '',
-        type: undefined,
-        shape: false,
-        ghost: false
+        type: 'unset',
+        color: 'default',
+        size: 'default'
       },
+      colorType: 'system',
       rules: {
         label: { required: true, message: '名称不能为空', trigger: 'blur' }
       }
@@ -62,8 +72,17 @@ export default {
   computed: {
     ...mapState(['tags']),
     ...mapGetters(['size']),
+    setting () {
+      return this.tags[0] || {}
+    },
     todoTypes () {
-      return this.tags[0]?.list || []
+      return this.setting.type || []
+    },
+    colors () {
+      return this.setting.color || []
+    },
+    sizes () {
+      return this.setting.size || []
     },
     title () {
       return this.params.id ? '编辑' : '添加'

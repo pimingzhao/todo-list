@@ -95,13 +95,15 @@ export default new Vuex.Store({
           v: [
             {
               id: 0,
-              list: ['default', 'primary', 'dashed', 'text', 'info', 'success', 'warning', 'error']
+              color: ['default', 'primary', 'success', 'warning', 'error', 'blue', 'green', 'red', 'yellow', 'pink', 'magenta', 'volcano', 'orange', 'gold', 'lime', 'cyan', 'geekblue', 'purple'],
+              size: ['default', 'medium', 'large'],
+              type: ['unset', 'border', 'dot']
             },
             {
               id: 1,
-              type: 'primary',
-              ghost: false,
-              shape: false,
+              type: 'unset',
+              color: 'default',
+              size: 'default',
               label: 'today',
               sort: 1
             }

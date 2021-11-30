@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 10:54:46
- * @LastEditTime: 2021-11-25 22:46:20
+ * @LastEditTime: 2021-11-30 11:47:10
  * @LastEditors: pimzh
  * @Description: TodoType
 -->
@@ -11,6 +11,7 @@
       v-for="(item, i) in menu"
       :key="i"
       padding="4px 8px"
+      trigger="hover"
     >
       <template v-slot:content>
         <span
@@ -20,7 +21,7 @@
           @click="row.event(item)"
         >{{ row.label }}</span>
       </template>
-      <render-button :size="size" :data="item" />
+      <render-tag :data="item" />
     </Poptip>
     <Button
       :size="size"
@@ -69,8 +70,7 @@ export default {
   margin-right: 6px;
 }
 .ivu-btn {
-  margin-right: 8px;
-  margin-bottom: 8px;
+  margin: 2px 4px 2px 0;
 }
 .btn-wrapper {
   max-width: 350px;
