@@ -7,7 +7,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     todo: [],
-    todoType: [],
+    tags: [],
     ui: {},
     user: {},
     search: [],
@@ -52,9 +52,9 @@ export default new Vuex.Store({
   },
   actions: {
     async setDefaultStore ({ commit, dispatch }) {
-      const [todo, todoType, ui, user, search, weather, time, namespace] = await Promise.all([
+      const [todo, tags, ui, user, search, weather, time, namespace] = await Promise.all([
         getDataList('todo'),
-        getDataList('todoType'),
+        getDataList('tags'),
         getDataDetail(1, 'ui'),
         getDataDetail(1, 'user'),
         getDataList('search'),
@@ -88,10 +88,10 @@ export default new Vuex.Store({
       } else {
         commit('SET_STATE', { user })
       }
-      if (todoType.length === 0) {
-        // set default todoType
+      if (tags.length === 0) {
+        // set default tags
         await dispatch('addArrState', {
-          k: 'todoType',
+          k: 'tags',
           v: [
             {
               id: 0,
@@ -108,7 +108,7 @@ export default new Vuex.Store({
           ]
         })
       } else {
-        commit('SET_STATE', { todoType })
+        commit('SET_STATE', { tags })
       }
       if (search.length === 0) {
         await dispatch('addArrState', {
@@ -178,8 +178,8 @@ export default new Vuex.Store({
       commit('SET_ISINIT', false)
     },
     async delTodoType ({ commit }, { id }) {
-      await delData(id, 'todoType')
-      commit('DEL_ARR_STATE', { k: 'todoType', v: id })
+      await delData(id, 'tags')
+      commit('DEL_ARR_STATE', { k: 'tags', v: id })
     },
     async addTodo ({ commit }, todos) {
       const todo = {

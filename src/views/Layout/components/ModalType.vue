@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-29 14:47:36
+ * @LastEditTime: 2021-11-30 11:06:47
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -60,10 +60,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['todoType']),
+    ...mapState(['tags']),
     ...mapGetters(['size']),
     todoTypes () {
-      return this.todoType[0]?.list || []
+      return this.tags[0]?.list || []
     },
     title () {
       return this.params.id ? '编辑' : '添加'
@@ -98,8 +98,8 @@ export default {
       this.$refs.form.validate(async valid => {
         if (valid) {
           this.params.id
-            ? await this.$store.dispatch('editArrState', { k: 'todoType', v: this.params })
-            : await this.$store.dispatch('addTodoType', this.getEmptyParam(this.params))
+            ? await this.$store.dispatch('editArrState', { k: 'tags', v: this.params })
+            : await this.$store.dispatch('addArrState', { k: 'tags', v: this.getEmptyParam(this.params) })
           this.handleCancel()
         }
       })

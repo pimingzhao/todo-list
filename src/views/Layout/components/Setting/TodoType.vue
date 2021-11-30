@@ -55,10 +55,10 @@ export default {
     }
   },
   computed: {
-    ...mapState(['todoType']),
+    ...mapState(['tags']),
     ...mapGetters(['size']),
     menu () {
-      return this.todoType.slice(1)
+      return this.tags.slice(1)
     }
   }
 }
