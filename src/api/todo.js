@@ -1,4 +1,4 @@
-import { addData, putData, getDataList } from '@/utils'
+import { addData, putData, searchTodoList } from '@/utils'
 
 export const addTodo = async (todos) => {
   const todo = {
@@ -11,7 +11,4 @@ export const addTodo = async (todos) => {
 
 export const editTodo = todo => putData(todo, 'todo')
 
-export const getTodoList = async ({ start_time }) => {
-  const todos = await getDataList('todo')
-  return todos.filter(item => item.start_time >= start_time)
-}
+export const getTodoList = async (param) => searchTodoList(param)
