@@ -1,14 +1,10 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-27 17:39:29
- * @LastEditTime: 2021-11-27 19:19:47
+ * @LastEditTime: 2021-12-01 13:51:47
  * @LastEditors: pimzh
  * @Description:
 -->
-<template>
-  <span>{{ time }}</span>
-</template>
-
 <script>
 import { timeFormat } from '@/utils'
 export default {
@@ -18,6 +14,10 @@ export default {
       required: true,
       type: String,
       default: ''
+    },
+    tag: {
+      type: String,
+      default: 'span'
     }
   },
   data () {
@@ -30,6 +30,10 @@ export default {
     time () {
       return timeFormat(this.date, this.format)
     }
+  },
+  render (h) {
+    const { tag, time } = this
+    return h(tag, time)
   },
   mounted () {
     this.date = new Date()

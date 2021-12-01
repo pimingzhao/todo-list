@@ -2,12 +2,12 @@
  * @Author: pimzh
  * @Date: 2021-11-26 09:17:10
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-27 19:22:07
+ * @LastEditTime: 2021-12-01 13:52:15
  * @Description: file content
 -->
 <template>
   <div>
-    <time-show :format="time.format" />
+    <time-show :format="time.format" tag="h3" />
   </div>
 </template>
 

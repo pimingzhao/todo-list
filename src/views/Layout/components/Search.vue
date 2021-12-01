@@ -61,7 +61,7 @@ export default {
 
 <style lang="scss" scoped>
 .search {
-  width: 50%;
+  width: 80%;
   ::v-deep .ivu-input {
     border-style: hidden hidden solid;
     &:focus, &:active {
