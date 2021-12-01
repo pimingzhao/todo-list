@@ -246,7 +246,7 @@ export default new Vuex.Store({
     uname: state => state.user.uname,
     size: state => state.ui.size,
     namespaceMap: state => {
-      const obj = Object.create(null)
+      const obj = {}
       state.namespace.forEach(item => { obj[item.id] = item })
       return obj
     },

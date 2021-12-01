@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-29 14:13:03
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-30 14:50:17
+ * @LastEditTime: 2021-12-01 13:12:47
  * @Description: file content
 -->
 <template>
@@ -13,7 +13,10 @@
     :mask-closable="false"
   >
     <Form ref="form" :model="params" :rules="rules" :label-width="80">
-      <FormItem label="任务名" prop="title">{{ params.title }}</FormItem>
+      <FormItem label="任务名" prop="title">
+        <template v-if="isAdd">{{ params.title }}</template>
+        <Input v-else v-model="params.title" :size="size" />
+      </FormItem>
       <FormItem label="命名空间" prop="namespace">
         <Select v-model="params.namespace" clearable>
           <Option v-for="item in namespace" :key="item.id" :value="item.id">{{ item.label }}</Option>
@@ -62,8 +65,11 @@ export default {
     tags () {
       return this.$store.state.tags.slice(1)
     },
+    isAdd () {
+      return !this.params.id
+    },
     title () {
-      return !this.params.id ? '添加任务' : '编辑任务'
+      return this.isAdd ? '添加任务' : '编辑任务'
     }
   },
   methods: {

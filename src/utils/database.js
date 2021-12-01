@@ -166,11 +166,7 @@ const searchStartTime = async (store, key, param) => {
     store,
     key,
     param[key],
-    'lowerBound',
-    (res) => {
-      console.log('res', res)
-      return true
-    }
+    'lowerBound'
   )
 }
 
@@ -179,11 +175,7 @@ const searchNamespace = async (store, key, param) => {
     store,
     key,
     param[key],
-    'only',
-    (res) => {
-      console.log('res', res)
-      return true
-    }
+    'only'
   )
 }
 

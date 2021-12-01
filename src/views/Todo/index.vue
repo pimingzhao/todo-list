@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-11-30 14:44:16
+ * @LastEditTime: 2021-12-01 11:56:40
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -9,7 +9,7 @@
   <div class="todo">
     <h1>Hi <Input ref="uname" v-if="isEdit" v-model="username" style="width: 120px;" class="uname" :size="size" @on-blur="editName" @on-enter="editName" /><span v-else @dblclick="handleDbClick">{{ uname }}</span>, what you want to do today?</h1><br/>
     <Input v-focus placeholder="请输入" v-model.trim="title" :size="size" @on-enter="handleEnter" />
-    <todo-today :data="todoToday" />
+    <todo-today :data="todoToday" @on-edit="handleEdit" />
     <!-- todo modal -->
     <modal-todo ref="todo" :save="handleSave" />
   </div>
@@ -44,8 +44,10 @@ export default {
     getTime (days = 1) {
       const time = new Date()
       time.setHours(0, 0, 0, 0)
-      const day = time.getDate()
-      time.setDate(day - days)
+      if (days) {
+        const day = time.getDate()
+        time.setDate(day - days)
+      }
       return time.getTime()
     },
     async getTodoToday () {
@@ -58,15 +60,16 @@ export default {
       }
       this.$Modal.confirm({
         title: '是否需要更细致化的定义任务？',
-        onOk: () => {
-          this.$refs.todo.handleShow({ title: this.title })
-        },
+        onOk: () => this.handleEdit({ title: this.title }),
         onCancel: async () => {
           await addTodo({ title: this.title })
           this.title = ''
           this.getTodoToday()
         }
       })
+    },
+    handleEdit (data) {
+      this.$refs.todo.handleShow(data)
     },
     handleDbClick () {
       this.isEdit = true
