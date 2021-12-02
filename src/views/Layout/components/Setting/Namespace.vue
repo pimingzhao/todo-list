@@ -1,12 +1,12 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:00:39
- * @LastEditTime: 2021-11-30 10:55:05
+ * @LastEditTime: 2021-12-02 09:58:48
  * @LastEditors: pimzh
  * @Description: Namespace
 -->
 <template>
-  <div>
+  <div style="max-width: 450px">
     <Button style="margin-bottom: 10px;" :size="size" @click="handleAdd">添加</Button>
     <Table :max-height="250" border :columns="columns" :data="tableData">
       <template v-slot:label="{row, index}">
@@ -56,8 +56,7 @@ export default {
         },
         {
           title: '操作',
-          slot: 'action',
-          width: 135
+          slot: 'action'
         }
       ],
       origin: Object.create(null),

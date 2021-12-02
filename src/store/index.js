@@ -109,7 +109,7 @@ export default new Vuex.Store({
       } else {
         commit('SET_STATE', { tags })
       }
-      if (search.length === 0) {
+      if (search.length === 0 && !user) {
         await dispatch('addArrState', {
           k: 'search',
           v: [
@@ -154,7 +154,7 @@ export default new Vuex.Store({
       } else {
         commit('SET_STATE', { time })
       }
-      if (namespace.length === 0) {
+      if (namespace.length === 0 && !user) {
         // set default namespace
         await dispatch('addArrState', {
           k: 'namespace',

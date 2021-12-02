@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 11:44:47
- * @LastEditTime: 2021-12-01 14:03:01
+ * @LastEditTime: 2021-12-02 10:54:12
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -41,9 +41,10 @@ export default {
 .layout {
   width: 100vw;
   height: 100vh;
-  padding: 20px;
+  padding: 15px;
   .container {
-    padding: 20px;
+    padding: 0 15px;
+    margin: 15px 0;
   }
 }
 </style>

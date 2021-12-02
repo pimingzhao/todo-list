@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 11:20:37
- * @LastEditTime: 2021-11-30 11:40:07
+ * @LastEditTime: 2021-12-02 08:50:03
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -12,12 +12,12 @@ export default {
   props: {
     data: {
       type: Object,
-      default: () => {},
-      required: true
+      default: () => {}
     }
   },
   render (h, context) {
     const { data } = context.props
+    if (!data) return ''
     return (
       <Tag
         size={data.size}

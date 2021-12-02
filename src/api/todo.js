@@ -1,4 +1,4 @@
-import { addData, putData, searchTodoList } from '@/utils'
+import { addData, putData, searchTodoList, delData } from '@/utils'
 
 export const addTodo = async (todos) => {
   const todo = {
@@ -11,4 +11,6 @@ export const addTodo = async (todos) => {
 
 export const editTodo = todo => putData(todo, 'todo')
 
-export const getTodoList = async (param) => searchTodoList(param)
+export const getTodoList = (param) => searchTodoList(param)
+
+export const delTodo = (id) => delData(id, 'todo')

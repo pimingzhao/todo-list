@@ -1,18 +1,171 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-11-30 13:29:25
+ * @LastEditTime: 2021-12-02 15:20:09
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
 <template>
   <div>
-    TodoList
+    <render-header
+      :data="header"
+      :headOpt="{ props: { rules } }"
+      @on-query="getTableList"
+    />
+    <Table :data="tableData" :columns="columns" border>
+      <template v-slot:status="{ row }">
+        <template v-if="row.done">
+          <span class="text-success"><Icon type="md-checkbox" />已完成</span>
+        </template>
+        <template v-else>
+          <span class="text-warning"><Icon type="md-checkbox-outline" />进行中</span>
+        </template>
+      </template>
+      <template v-slot:start_time="{ row }">
+        {{ timeFormat(row.start_time) }}
+      </template>
+      <template v-slot:namespace="{ row }">
+        {{ (row.namespace in namespaceMap) ? namespaceMap[row.namespace].label : '' }}
+      </template>
+      <template v-slot:tags="{ row }">
+        <template v-for="item in row.tags">
+          <render-tag :key="item" v-if="item in tagsMap" :data="tagsMap[item]" />
+        </template>
+      </template>
+      <template v-slot:action="{ row }">
+        <template v-for="(item, i) in actions">
+          <span :key="i" class="act text-primary cursor-pointer" @click="item.event(row)">{{ item.label }}</span>
+        </template>
+      </template>
+    </Table>
+    <modal-todo ref="modal" :save="handleSave" />
   </div>
 </template>
 
 <script>
+import { mapGetters, mapState } from 'vuex'
+import ModalTodo from '@/views/Todo/components/ModalTodo'
+
+import { getTimeRange, timeFormat } from '@/utils'
+import { getTodoList, editTodo, delTodo } from '@/api/todo'
 export default {
-  name: 'TodoList'
+  name: 'TodoList',
+  components: { ModalTodo },
+  data () {
+    return {
+      rules: {
+        start_time: [
+          {
+            required: true,
+            validator: (rule, value, callback) => {
+              if (!value[0] && !value[1]) {
+                callback(new Error('开始时间不能为空'))
+              } else {
+                callback()
+              }
+            },
+            trigger: 'change'
+          }
+        ]
+      },
+      columns: [
+        {
+          title: '状态',
+          slot: 'status'
+        },
+        {
+          title: '任务名',
+          key: 'title'
+        },
+        {
+          title: '开始时间',
+          slot: 'start_time'
+        },
+        {
+          title: '命名空间',
+          slot: 'namespace'
+        },
+        {
+          title: '标签',
+          slot: 'tags'
+        },
+        {
+          title: '操作',
+          slot: 'action'
+        }
+      ],
+      tableData: [],
+      actions: [
+        {
+          label: '编辑',
+          event: row => this.$refs.modal.handleShow(row)
+        },
+        {
+          label: '删除',
+          event: this.handleDel
+        }
+      ],
+      params: null
+    }
+  },
+  computed: {
+    ...mapState(['namespace', 'tags']),
+    ...mapGetters(['namespaceMap', 'tagsMap']),
+    header () {
+      return [
+        {
+          tag: 'date',
+          name: 'start_time',
+          label: '开始时间',
+          value: getTimeRange(null, 0)
+        },
+        {
+          tag: 'select',
+          name: 'namespace',
+          label: '命名空间',
+          data: this.namespace
+        },
+        {
+          tag: 'select',
+          name: 'tags',
+          label: '标签',
+          data: this.tags.slice(1)
+        }
+      ]
+    }
+  },
+  methods: {
+    async getTableList (params) {
+      if (params) {
+        this.params = {
+          ...params,
+          start_time: params.start_time.map(date => date.getTime())
+        }
+      }
+      this.tableData = await getTodoList(this.params)
+    },
+    timeFormat (time) {
+      return timeFormat(time)
+    },
+    async handleSave (params) {
+      await editTodo(params)
+      this.getTableList()
+    },
+    handleDel ({ id }) {
+      this.$Modal.confirm({
+        title: '您确定要删除？',
+        onOk: async () => {
+          await delTodo(id)
+          this.getTableList()
+        }
+      })
+    }
+  }
 }
 </script>
+
+<style lang="scss" scoped>
+.act:not(:last-child) {
+  margin-right: 6px;
+}
+</style>

@@ -138,10 +138,13 @@ export const delData = (keyPath, storeName) => {
   }
 }
 
-const asyncSearch = (store, index, value, range, cb) => {
+const asyncSearch = (store, index, range, cb, ...value) => {
   const res = []
+  if (typeof cb !== 'function') {
+    value = [cb, ...value]
+  }
   return new Promise((resolve, reject) => {
-    const request = store.index(index).openCursor(IDBKeyRange[range](value))
+    const request = store.index(index).openCursor(IDBKeyRange[range](...value))
     request.onsuccess = e => {
       const cursor = e.target.result
       if (cursor) {
@@ -162,11 +165,34 @@ const asyncSearch = (store, index, value, range, cb) => {
 }
 
 const searchStartTime = async (store, key, param) => {
+  const filters = (data) => {
+    let res = true
+    if (param.namespace && param.namespace !== data.namespace) {
+      res = false
+    }
+    if (res && param.tags) {
+      if (!data.tags || (data.tags && !data.tags.includes(param.tags))) {
+        res = false
+      }
+    }
+    return res
+  }
+  if (Array.isArray(param[key])) {
+    return asyncSearch(
+      store,
+      key,
+      'bound',
+      filters,
+      param[key][0],
+      param[key][1]
+    )
+  }
   return asyncSearch(
     store,
     key,
-    param[key],
-    'lowerBound'
+    'lowerBound',
+    filters,
+    param[key]
   )
 }
 
@@ -174,8 +200,8 @@ const searchNamespace = async (store, key, param) => {
   return asyncSearch(
     store,
     key,
-    param[key],
-    'only'
+    'only',
+    param[key]
   )
 }
 
@@ -183,10 +209,10 @@ const searchNamespace = async (store, key, param) => {
 export const searchTodoList = (param) => {
   const transaction = database.transaction('todo', 'readonly')
   const store = transaction.objectStore('todo')
-  if (param.namespace) {
-    return searchNamespace(store, 'namespace', param)
-  }
   if (param.start_time) {
     return searchStartTime(store, 'start_time', param)
+  }
+  if (param.namespace) {
+    return searchNamespace(store, 'namespace', param)
   }
 }

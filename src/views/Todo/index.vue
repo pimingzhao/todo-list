@@ -1,15 +1,40 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-12-01 11:56:40
+ * @LastEditTime: 2021-12-02 15:01:13
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <div class="todo">
     <h1>Hi <Input ref="uname" v-if="isEdit" v-model="username" style="width: 120px;" class="uname" :size="size" @on-blur="editName" @on-enter="editName" /><span v-else @dblclick="handleDbClick">{{ uname }}</span>, what you want to do today?</h1><br/>
-    <Input v-focus placeholder="请输入" v-model.trim="title" :size="size" @on-enter="handleEnter" />
-    <todo-today :data="todoToday" @on-edit="handleEdit" />
+    <Input
+      v-focus
+      placeholder="请输入"
+      v-model.trim="title"
+      :size="size"
+      @on-enter="handleEnter"
+    >
+      <Button slot="append" icon="md-add" :size="size" @click="handleEnter"></Button>
+    </Input>
+    <div class="todo-header flex justify-between items-end">
+      <ul>
+        <li
+          v-for="(item, i) in status"
+          :key="i"
+          class="inline-block cursor-pointer"
+          :class="{
+            'active text-lg font-bold text-primary': item.value === active,
+            'text-md': item.value !== active
+          }"
+          @click="() => active = item.value"
+        >
+          <span>{{ item.label }}</span>
+        </li>
+      </ul>
+      <router-link tag="a" class="text-primary" to="/todolist">更多 >></router-link>
+    </div>
+    <todo-today :isDone="active === 'done'" :data="todoToday" :handleDel="handleDel" @on-edit="handleEdit" @on-save="handleSave" />
     <!-- todo modal -->
     <modal-todo ref="todo" :save="handleSave" />
   </div>
@@ -21,7 +46,7 @@ import TodoToday from './components/TodoToday'
 import ModalTodo from './components/ModalTodo'
 import { mapGetters } from 'vuex'
 
-import { addTodo, editTodo, getTodoList } from '@/api/todo'
+import { addTodo, editTodo, getTodoList, delTodo } from '@/api/todo'
 export default {
   name: 'Home',
   components: { TodoToday, ModalTodo },
@@ -31,7 +56,18 @@ export default {
       title: '',
       isEdit: false,
       username: '',
-      todoToday: []
+      todoToday: [],
+      active: 'do',
+      status: [
+        {
+          label: '进行中',
+          value: 'do'
+        },
+        {
+          label: '已完成',
+          value: 'done'
+        }
+      ]
     }
   },
   computed: {
@@ -99,6 +135,15 @@ export default {
         : await editTodo(params)
       this.title = ''
       this.getTodoToday()
+    },
+    handleDel (id) {
+      this.$Modal.confirm({
+        title: '您确定要删除？',
+        onOk: async () => {
+          await delTodo(id)
+          this.getTodoToday()
+        }
+      })
     }
   }
 }
@@ -112,6 +157,23 @@ export default {
     &:focus, &:active {
       border-style: hidden hidden solid;
       box-shadow: none;
+    }
+  }
+  &-header {
+    margin-top: 10px;
+    > ul {
+      margin-bottom: 5px;
+      li {
+        height: 38px;
+        line-height: 38px;
+        padding: 0 10px 5px;
+        &:not(:last-child) {
+          margin-right: 10px;
+        }
+        &.active {
+          border-bottom: 2px solid #{$color_primary};
+        }
+      }
     }
   }
 }

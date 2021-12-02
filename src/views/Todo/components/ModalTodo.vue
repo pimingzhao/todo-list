@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-29 14:13:03
  * @LastEditors: pimzh
- * @LastEditTime: 2021-12-01 14:06:35
+ * @LastEditTime: 2021-12-02 10:36:23
  * @Description: file content
 -->
 <template>
@@ -14,7 +14,7 @@
   >
     <Form ref="form" :model="params" :rules="rules" :label-width="80">
       <FormItem label="任务名" prop="title">
-        <template v-if="isAdd">{{ params.title }}</template>
+        <template v-if="isAdd || params.done">{{ params.title }}</template>
         <Input v-else v-model="params.title" :size="size" />
       </FormItem>
       <FormItem label="命名空间" prop="namespace">

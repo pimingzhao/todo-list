@@ -60,3 +60,23 @@ export const deepClone = obj => {
   }
   return obj
 }
+
+export const getTimeRange = (date, days) => {
+  let start, end
+  if (typeof date === 'object') {
+    if (date === null) {
+      start = new Date()
+      end = new Date()
+    } else {
+      start = date
+      end = date
+    }
+  } else {
+    start = new Date(date)
+    end = new Date(date)
+  }
+  start.setDate(start.getDate() - days)
+  start.setHours(0, 0, 0, 0)
+  end.setHours(23, 59, 59, 59)
+  return [start, end]
+}
