@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 09:17:10
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-29 13:17:46
+ * @LastEditTime: 2021-12-03 09:40:18
  * @Description: file content
 -->
 <template>
@@ -11,9 +11,11 @@
       <label>{{item.label}}：</label>
       <span>{{item.value.join('，')}}</span>
     </li>
-    <li>
+    <li class="flex items-center">
       <label>自定义格式：</label>
-      <Input v-model="format" style="width: 200px" @on-enter="handleChange" />
+      <Input class="flex-1" v-model="format" :size="size" @on-enter="handleChange">
+        <Button slot="append" icon="md-checkmark" :size="size" @click="handleChange"></Button>
+      </Input>
     </li>
     <li>
       <label>效果预览：</label>
@@ -23,6 +25,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'Weather',
   data () {
@@ -61,6 +64,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['size']),
     timeFormat () {
       return this.$store.state.time.format
     }
@@ -80,3 +84,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+ul > li:not(:last-child) {
+  margin-bottom: 4px;
+}
+</style>

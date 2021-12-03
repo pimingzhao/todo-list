@@ -1,12 +1,15 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-02 15:20:09
+ * @LastEditTime: 2021-12-03 09:17:51
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
 <template>
   <div>
+    <router-link to="/todo">
+      <Icon type="ios-arrow-back" /> back todo
+    </router-link><br/><br/>
     <render-header
       :data="header"
       :headOpt="{ props: { rules } }"
