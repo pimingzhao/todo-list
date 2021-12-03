@@ -167,7 +167,10 @@ const asyncSearch = (store, index, range, cb, ...value) => {
 const searchStartTime = async (store, key, param) => {
   const filters = (data) => {
     let res = true
-    if (param.namespace && param.namespace !== data.namespace) {
+    if (param.done && param.done !== data.done.toString()) {
+      res = false
+    }
+    if (typeof param.namespace === 'number' && param.namespace !== data.namespace) {
       res = false
     }
     if (res && param.tags) {
@@ -212,7 +215,7 @@ export const searchTodoList = (param) => {
   if (param.start_time) {
     return searchStartTime(store, 'start_time', param)
   }
-  if (param.namespace) {
+  if (typeof param.namespace === 'number') {
     return searchNamespace(store, 'namespace', param)
   }
 }

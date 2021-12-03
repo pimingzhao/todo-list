@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:00:39
- * @LastEditTime: 2021-12-02 09:58:48
+ * @LastEditTime: 2021-12-03 10:28:39
  * @LastEditors: pimzh
  * @Description: Namespace
 -->
@@ -10,21 +10,26 @@
     <Button style="margin-bottom: 10px;" :size="size" @click="handleAdd">添加</Button>
     <Table :max-height="250" border :columns="columns" :data="tableData">
       <template v-slot:label="{row, index}">
-        <Input v-if="row.isEdit" v-model.trim="row.label" :size="size" @on-change="e => changeRow(index, 'label', e)" />
+        <Input v-if="row.isEdit && row.id !== 0" v-model.trim="row.label" :size="size" @on-change="e => changeRow(index, 'label', e)" />
         <template v-else>{{ row.label }}</template>
       </template>
       <template v-slot:show="{row, index}">
         <i-switch
-          :disabled="!row.isEdit"
+          :disabled="!row.isEdit || row.id === 0"
           v-model="row.show"
           :size="size"
           @on-change="v => $set(tableData[index], 'show', v)"
         />
       </template>
+
+      <template v-slot:limit="{row, index}">
+        <Input v-if="row.isEdit" v-model.number="row.limit" :min="1" type="number" :size="size" @on-change="e => changeRow(index, 'limit', e)" />
+        <template v-else>{{ row.limit }}</template>
+      </template>
       <template v-slot:action="{row,index}">
         <template v-if="!row.isEdit">
           <Button size="small" type="primary" @click="handleEdit(row, index)">编辑</Button>&nbsp;
-          <Button size="small" type="error" @click="handleDel(row, index)">删除</Button>
+          <Button v-if="row.id !== 0" size="small" type="error" @click="handleDel(row, index)">删除</Button>
         </template>
         <template v-else>
           <Button size="small" type="primary" @click="handleSave(row, index)">保存</Button>&nbsp;
@@ -47,7 +52,7 @@ export default {
         {
           title: '名称',
           slot: 'label',
-          width: 200
+          width: 135
         },
         {
           title: '显示',
@@ -55,8 +60,14 @@ export default {
           width: 80
         },
         {
+          title: '显示数量',
+          slot: 'limit',
+          width: 95
+        },
+        {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          width: 135
         }
       ],
       origin: Object.create(null),
@@ -64,7 +75,8 @@ export default {
       baseData: {
         id: '',
         label: '',
-        show: true
+        show: true,
+        limit: 8
       }
     }
   },
@@ -91,7 +103,7 @@ export default {
       this.tableData.splice(index, 1)
     },
     async handleSave (row, index) {
-      if (!row.label) {
+      if (!row.label && row.id !== 0) {
         this.$Message.warning('名称不能为空！')
         return
       }

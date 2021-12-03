@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-29 14:13:03
  * @LastEditors: pimzh
- * @LastEditTime: 2021-12-02 10:36:23
+ * @LastEditTime: 2021-12-03 10:30:15
  * @Description: file content
 -->
 <template>
@@ -18,7 +18,7 @@
         <Input v-else v-model="params.title" :size="size" />
       </FormItem>
       <FormItem label="命名空间" prop="namespace">
-        <Select v-model="params.namespace" clearable>
+        <Select v-model="params.namespace">
           <Option v-for="item in namespace" :key="item.id" :value="item.id">{{ item.label }}</Option>
         </Select>
       </FormItem>

@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-03 09:17:51
+ * @LastEditTime: 2021-12-03 11:07:11
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
@@ -120,7 +120,29 @@ export default {
           tag: 'date',
           name: 'start_time',
           label: '开始时间',
-          value: getTimeRange(null, 0)
+          value: getTimeRange(null, 0),
+          grids: {
+            xl: 5
+          }
+        },
+        {
+          tag: 'select',
+          name: 'done',
+          label: '状态',
+          value: 'false',
+          data: [
+            {
+              label: '已完成',
+              id: 'true'
+            },
+            {
+              label: '进行中',
+              id: 'false'
+            }
+          ],
+          grids: {
+            xl: 3
+          }
         },
         {
           tag: 'select',
