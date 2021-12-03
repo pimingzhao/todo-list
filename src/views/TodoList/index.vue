@@ -1,43 +1,55 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-02 15:20:09
+ * @LastEditTime: 2021-12-02 17:59:42
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
 <template>
-  <div>
+  <div class="flex flex-col">
     <render-header
       :data="header"
       :headOpt="{ props: { rules } }"
       @on-query="getTableList"
     />
-    <Table :data="tableData" :columns="columns" border>
-      <template v-slot:status="{ row }">
-        <template v-if="row.done">
-          <span class="text-success"><Icon type="md-checkbox" />已完成</span>
+    <div ref="tableWrapper" class="flex-1">
+      <Table :data="tableData" :columns="columns" border :max-height="maxHeight">
+        <template v-slot:status="{ row }">
+          <template v-if="row.done">
+            <span class="text-success"><Icon type="md-checkbox" />已完成</span>
+          </template>
+          <template v-else>
+            <span class="text-warning"><Icon type="md-checkbox-outline" />进行中</span>
+          </template>
         </template>
-        <template v-else>
-          <span class="text-warning"><Icon type="md-checkbox-outline" />进行中</span>
+        <template v-slot:start_time="{ row }">
+          {{ timeFormat(row.start_time) }}
         </template>
-      </template>
-      <template v-slot:start_time="{ row }">
-        {{ timeFormat(row.start_time) }}
-      </template>
-      <template v-slot:namespace="{ row }">
-        {{ (row.namespace in namespaceMap) ? namespaceMap[row.namespace].label : '' }}
-      </template>
-      <template v-slot:tags="{ row }">
-        <template v-for="item in row.tags">
-          <render-tag :key="item" v-if="item in tagsMap" :data="tagsMap[item]" />
+        <template v-slot:namespace="{ row }">
+          {{ (row.namespace in namespaceMap) ? namespaceMap[row.namespace].label : '' }}
         </template>
-      </template>
-      <template v-slot:action="{ row }">
-        <template v-for="(item, i) in actions">
-          <span :key="i" class="act text-primary cursor-pointer" @click="item.event(row)">{{ item.label }}</span>
+        <template v-slot:tags="{ row }">
+          <template v-for="item in row.tags">
+            <render-tag :key="item" v-if="item in tagsMap" :data="tagsMap[item]" />
+          </template>
         </template>
-      </template>
-    </Table>
+        <template v-slot:action="{ row }">
+          <template v-for="(item, i) in actions">
+            <span :key="i" class="act text-primary cursor-pointer" @click="item.event(row)">{{ item.label }}</span>
+          </template>
+        </template>
+      </Table>
+    </div>
+    <p style="margin-top: 10px" class="text-right">
+      <Page
+        :current="params.page"
+        :page-size="params.size"
+        :total="total" show-total
+        show-elevator show-sizer
+        @on-change="page => {params.page = page;getTableList()}"
+        @on-page-size-change="size => {params.page = 1;params.size = size;getTableList()}"
+      />
+    </p>
     <modal-todo ref="modal" :save="handleSave" />
   </div>
 </template>
@@ -105,7 +117,12 @@ export default {
           event: this.handleDel
         }
       ],
-      params: null
+      params: {
+        page: 1,
+        size: 10
+      },
+      maxHeight: 'auto',
+      total: 0
     }
   },
   computed: {
@@ -134,15 +151,29 @@ export default {
       ]
     }
   },
+  mounted () {
+    this.handleResize()
+    window.addEventListener('resize', this.handleResize)
+  },
+  beforeDestroy () {
+    window.removeEventListener('resize', this.handleResize)
+  },
   methods: {
+    handleResize () {
+      this.maxHeight = this.$refs.tableWrapper.clientHeight - 10
+    },
     async getTableList (params) {
       if (params) {
         this.params = {
+          ...this.params,
           ...params,
+          page: 1,
           start_time: params.start_time.map(date => date.getTime())
         }
       }
-      this.tableData = await getTodoList(this.params)
+      const res = await getTodoList(this.params)
+      this.tableData = res.data
+      this.total = res.total
     },
     timeFormat (time) {
       return timeFormat(time)

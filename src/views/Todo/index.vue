@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-12-02 15:01:13
+ * @LastEditTime: 2021-12-02 17:31:51
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -87,7 +87,8 @@ export default {
       return time.getTime()
     },
     async getTodoToday () {
-      this.todoToday = await getTodoList({ start_time: this.getTime() })
+      const res = await getTodoList({ start_time: this.getTime() })
+      this.todoToday = res.data
     },
     async handleEnter () {
       if (!this.title) {

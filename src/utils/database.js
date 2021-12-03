@@ -165,6 +165,14 @@ const asyncSearch = (store, index, range, cb, ...value) => {
 }
 
 const searchStartTime = async (store, key, param) => {
+  let total = 0, data
+  let start = 0
+  let end = 0
+
+  if (param.page && param.size) {
+    start = (param.page - 1) * param.size
+    end = param.page * param.size
+  }
   const filters = (data) => {
     let res = true
     if (param.namespace && param.namespace !== data.namespace) {
@@ -175,10 +183,16 @@ const searchStartTime = async (store, key, param) => {
         res = false
       }
     }
+    if (res) {
+      total ++
+      if (end !== 0 && (total <= start || total > end)) {
+        res = false
+      }
+    }
     return res
   }
   if (Array.isArray(param[key])) {
-    return asyncSearch(
+    data = await asyncSearch(
       store,
       key,
       'bound',
@@ -186,33 +200,24 @@ const searchStartTime = async (store, key, param) => {
       param[key][0],
       param[key][1]
     )
+  } else {
+    data = await asyncSearch(
+      store,
+      key,
+      'lowerBound',
+      filters,
+      param[key]
+    )
   }
-  return asyncSearch(
-    store,
-    key,
-    'lowerBound',
-    filters,
-    param[key]
-  )
-}
-
-const searchNamespace = async (store, key, param) => {
-  return asyncSearch(
-    store,
-    key,
-    'only',
-    param[key]
-  )
+  return {
+    data,
+    total
+  }
 }
 
 // controller todos
 export const searchTodoList = (param) => {
   const transaction = database.transaction('todo', 'readonly')
   const store = transaction.objectStore('todo')
-  if (param.start_time) {
-    return searchStartTime(store, 'start_time', param)
-  }
-  if (param.namespace) {
-    return searchNamespace(store, 'namespace', param)
-  }
+  return searchStartTime(store, 'start_time', param)
 }
