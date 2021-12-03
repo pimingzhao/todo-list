@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-22 09:42:44
- * @LastEditTime: 2021-12-02 15:01:13
+ * @LastEditTime: 2021-12-03 13:27:24
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -17,7 +17,7 @@
     >
       <Button slot="append" icon="md-add" :size="size" @click="handleEnter"></Button>
     </Input>
-    <div class="todo-header flex justify-between items-end">
+    <div class="todo-header flex justify-between items-center">
       <ul>
         <li
           v-for="(item, i) in status"
@@ -77,7 +77,7 @@ export default {
     this.getTodoToday()
   },
   methods: {
-    getTime (days = 1) {
+    getTime (days = 0) {
       const time = new Date()
       time.setHours(0, 0, 0, 0)
       if (days) {

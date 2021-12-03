@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:00:39
- * @LastEditTime: 2021-12-03 10:28:39
+ * @LastEditTime: 2021-12-03 13:37:38
  * @LastEditors: pimzh
  * @Description: Namespace
 -->
@@ -23,7 +23,7 @@
       </template>
 
       <template v-slot:limit="{row, index}">
-        <Input v-if="row.isEdit" v-model.number="row.limit" :min="1" type="number" :size="size" @on-change="e => changeRow(index, 'limit', e)" />
+        <Input v-if="row.isEdit" v-model.number="row.limit" :min="1" number type="number" :size="size" @on-change="e => changeRow(index, 'limit', e)" />
         <template v-else>{{ row.limit }}</template>
       </template>
       <template v-slot:action="{row,index}">

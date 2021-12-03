@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-03 11:07:11
+ * @LastEditTime: 2021-12-03 13:31:54
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
@@ -74,27 +74,33 @@ export default {
       columns: [
         {
           title: '状态',
-          slot: 'status'
+          slot: 'status',
+          minWidth: 100
         },
         {
           title: '任务名',
-          key: 'title'
+          key: 'title',
+          minWidth: 110
         },
         {
           title: '开始时间',
-          slot: 'start_time'
+          slot: 'start_time',
+          minWidth: 170
         },
         {
           title: '命名空间',
-          slot: 'namespace'
+          slot: 'namespace',
+          minWidth: 120
         },
         {
           title: '标签',
-          slot: 'tags'
+          slot: 'tags',
+          minWidth: 120
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          minWidth: 105
         }
       ],
       tableData: [],
