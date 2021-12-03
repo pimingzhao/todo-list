@@ -1,12 +1,15 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-02 17:59:42
+ * @LastEditTime: 2021-12-03 21:01:33
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
 <template>
-  <div class="flex flex-col">
+  <div>
+    <router-link to="/todo">
+      <Icon type="ios-arrow-back" /> back todo
+    </router-link><br/><br/>
     <render-header
       :data="header"
       :headOpt="{ props: { rules } }"
@@ -83,27 +86,33 @@ export default {
       columns: [
         {
           title: '状态',
-          slot: 'status'
+          slot: 'status',
+          minWidth: 100
         },
         {
           title: '任务名',
-          key: 'title'
+          key: 'title',
+          minWidth: 110
         },
         {
           title: '开始时间',
-          slot: 'start_time'
+          slot: 'start_time',
+          minWidth: 170
         },
         {
           title: '命名空间',
-          slot: 'namespace'
+          slot: 'namespace',
+          minWidth: 120
         },
         {
           title: '标签',
-          slot: 'tags'
+          slot: 'tags',
+          minWidth: 120
         },
         {
           title: '操作',
-          slot: 'action'
+          slot: 'action',
+          minWidth: 105
         }
       ],
       tableData: [],
@@ -134,7 +143,29 @@ export default {
           tag: 'date',
           name: 'start_time',
           label: '开始时间',
-          value: getTimeRange(null, 0)
+          value: getTimeRange(null, 0),
+          grids: {
+            xl: 5
+          }
+        },
+        {
+          tag: 'select',
+          name: 'done',
+          label: '状态',
+          value: 'false',
+          data: [
+            {
+              label: '已完成',
+              id: 'true'
+            },
+            {
+              label: '进行中',
+              id: 'false'
+            }
+          ],
+          grids: {
+            xl: 3
+          }
         },
         {
           tag: 'select',

@@ -165,7 +165,7 @@ const asyncSearch = (store, index, range, cb, ...value) => {
 }
 
 const searchStartTime = async (store, key, param) => {
-  let total = 0, data
+  let total = 0; let data
   let start = 0
   let end = 0
 
@@ -175,7 +175,10 @@ const searchStartTime = async (store, key, param) => {
   }
   const filters = (data) => {
     let res = true
-    if (param.namespace && param.namespace !== data.namespace) {
+    if (param.done && param.done !== data.done.toString()) {
+      res = false
+    }
+    if (typeof param.namespace === 'number' && param.namespace !== data.namespace) {
       res = false
     }
     if (res && param.tags) {
@@ -184,7 +187,7 @@ const searchStartTime = async (store, key, param) => {
       }
     }
     if (res) {
-      total ++
+      total++
       if (end !== 0 && (total <= start || total > end)) {
         res = false
       }
@@ -219,5 +222,10 @@ const searchStartTime = async (store, key, param) => {
 export const searchTodoList = (param) => {
   const transaction = database.transaction('todo', 'readonly')
   const store = transaction.objectStore('todo')
-  return searchStartTime(store, 'start_time', param)
+  if (param.start_time) {
+    return searchStartTime(store, 'start_time', param)
+  }
+  // if (typeof param.namespace === 'number') {
+  //   return searchNamespace(store, 'namespace', param)
+  // }
 }

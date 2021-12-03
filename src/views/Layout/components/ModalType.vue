@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:39:21
- * @LastEditTime: 2021-11-30 13:17:45
+ * @LastEditTime: 2021-12-03 09:21:50
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -84,7 +84,7 @@ export default {
       return this.setting.size || []
     },
     title () {
-      return this.params.id ? '编辑' : '添加'
+      return (this.params.id ? '编辑' : '添加') + '标签'
     }
   },
   methods: {
@@ -95,6 +95,7 @@ export default {
           ...this.params,
           ...data
         }
+        this.colorType = this.params.color.startsWith('rgb') ? 'custom' : 'system'
       }
       this.$nextTick(() => {
         this.$refs.input.$el.lastElementChild.focus()

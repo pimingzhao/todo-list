@@ -1,20 +1,20 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 10:47:18
- * @LastEditTime: 2021-12-02 10:53:11
+ * @LastEditTime: 2021-12-03 10:55:31
  * @LastEditors: pimzh
  * @Description:
 -->
 <template>
   <ul class="todo-today">
     <template  v-for="(item, i) in list">
-      <li v-if="item.data.length" :key="i" class="namespace rounded" :class="{ 'donespace': isDone, 'border': 'key' in item }">
+      <li v-if="item.data.length" :key="i" class="namespace rounded" :class="{ 'donespace': isDone, 'border': !!item.id }">
         <ul>
-          <li v-if="('key' in item)">
+          <li v-if="item.id">
             <span class="title inline-block text-lg text-primary">{{ item.label }}</span>
           </li>
           <Row :gutter="10">
-            <Col v-for="todo in item.data" :key="todo.id" :xs="24" :sm="12" :md="8" :lg="6">
+            <Col v-for="todo in getTodos(item)" :key="todo.id" :xs="24" :sm="12" :md="8" :lg="6">
               <div
                 title="编辑"
                 class="todo-item rounded cursor-pointer flex justify-between items-center"
@@ -26,7 +26,7 @@
                   </Checkbox>
                 </span>
                 <span>
-                  <render-tag v-for="item in todo.tags" :key="item" :data="tagsMap[item]"></render-tag>
+                  <render-tag v-for="tag in todo.tags" :key="tag" :data="tagsMap[tag]"></render-tag>
                   <span class="text-error" @click.stop="handleDel(todo.id)">删除</span>
                 </span>
               </div>
@@ -67,10 +67,9 @@ export default {
       const { isDone, data, namespaceMap } = this
       const listMap = Object.create(null)
       const list = Object.keys(namespaceMap).map((key, i) => {
-        listMap[key] = i + 1
-        return { key, data: [], label: namespaceMap[key].label }
+        listMap[key] = i
+        return { ...namespaceMap[key], data: [] }
       })
-      list.unshift({ data: [] })
       data.forEach(item => {
         if (item.done !== isDone) {
           return
@@ -81,7 +80,7 @@ export default {
           list[0].data.push(item)
         }
       })
-      return list.filter(item => !('key' in item) || namespaceMap[item.key].show)
+      return list.filter(item => namespaceMap[item.id].show)
     },
     isEmpty () {
       return this.list.every(item => item.data.length === 0)
@@ -90,6 +89,12 @@ export default {
   methods: {
     handleStatus (todo) {
       this.$emit('on-save', { ...todo, done: true })
+    },
+    getTodos (item) {
+      if (this.isDone) {
+        return item.data
+      }
+      return item.data.slice(0, item.limit)
     }
   }
 }

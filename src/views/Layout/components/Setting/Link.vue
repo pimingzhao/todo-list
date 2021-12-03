@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 17:31:15
  * @LastEditors: pimzh
- * @LastEditTime: 2021-11-30 10:01:26
+ * @LastEditTime: 2021-12-03 13:41:06
  * @Description: file content
 -->
 <template>
@@ -55,17 +55,17 @@ export default {
         {
           title: '名称',
           slot: 'label',
-          maxWidth: 120
+          width: 80
         },
         {
           title: '图标',
           slot: 'logo',
-          maxWidth: 120
+          width: 120
         },
         {
           title: '地址',
           slot: 'url',
-          maxWidth: 120
+          width: 120
         },
         {
           title: '默认',

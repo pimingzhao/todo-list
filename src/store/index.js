@@ -160,14 +160,22 @@ export default new Vuex.Store({
           k: 'namespace',
           v: [
             {
+              id: 0,
+              label: '默认',
+              show: true,
+              limit: 8
+            },
+            {
               id: 1,
               label: 'todo-today',
-              show: true
+              show: true,
+              limit: 8
             },
             {
               id: 2,
               label: 'done',
-              show: true
+              show: true,
+              limit: 8
             }
           ]
         })
@@ -206,7 +214,7 @@ export default new Vuex.Store({
       }
     },
     async editNamespace ({ commit, dispatch }, namespace) {
-      if (!namespace.id) {
+      if (typeof namespace.id !== 'number') {
         delete namespace.id
         const id = await addData(namespace, 'namespace')
         namespace.id = id

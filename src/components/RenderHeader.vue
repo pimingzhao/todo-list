@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-10-27 09:36:46
  * @LastEditors: pimzh
- * @LastEditTime: 2021-12-02 15:11:50
+ * @LastEditTime: 2021-12-03 21:02:34
  * @Description: file content
 -->
 <script>
@@ -34,7 +34,7 @@ export default {
         sm: 12,
         md: 8,
         lg: 6,
-        xl: 6
+        xl: 4
       },
       dateGrids: {
         xs: 24,
@@ -283,8 +283,7 @@ export default {
 
 <style lang="scss" scoped>
 .form-wrap {
-  padding: 20px 10px 0;
-  border: 1px solid #dcdee2;
+  padding: 15px 10px 0;
   margin-bottom: 20px;
   ::v-deep.ivu-form-item {
     display: flex;
