@@ -1,12 +1,12 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-03 21:01:33
+ * @LastEditTime: 2021-12-06 10:03:50
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
 <template>
-  <div>
+  <div class="flex flex-col">
     <router-link to="/todo">
       <Icon type="ios-arrow-back" /> back todo
     </router-link><br/><br/>
@@ -15,7 +15,7 @@
       :headOpt="{ props: { rules } }"
       @on-query="getTableList"
     />
-    <div ref="tableWrapper" class="flex-1">
+    <div ref="tableWrapper" class="flex-1 overflow-hidden">
       <Table :data="tableData" :columns="columns" border :max-height="maxHeight">
         <template v-slot:status="{ row }">
           <template v-if="row.done">
@@ -191,7 +191,7 @@ export default {
   },
   methods: {
     handleResize () {
-      this.maxHeight = this.$refs.tableWrapper.clientHeight - 10
+      this.maxHeight = this.$refs.tableWrapper.clientHeight
     },
     async getTableList (params) {
       if (params) {

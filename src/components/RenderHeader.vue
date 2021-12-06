@@ -2,11 +2,12 @@
  * @Author: pimzh
  * @Date: 2021-10-27 09:36:46
  * @LastEditors: pimzh
- * @LastEditTime: 2021-12-03 21:02:34
+ * @LastEditTime: 2021-12-06 09:43:08
  * @Description: file content
 -->
 <script>
 import { getTimeRange } from '@/utils'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'RenderHeader',
@@ -94,6 +95,9 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(['size'])
+  },
   created () {
     this.data.forEach(item => {
       // set new property in reactive
@@ -132,6 +136,7 @@ export default {
       return (
         <i-input
           attrs={this.mergeOption(this.inputOpt, item.props)}
+          size={this.size}
           v-model={this.params[item.name]}
           onchange={() => item.onChange && item.onChange(this.params[item.name])}
         />
@@ -143,6 +148,7 @@ export default {
         <i-select
           attrs={props}
           v-model={this.params[item.name]}
+          size={this.size}
           onchange={() => item.onChange && item.onChange(this.params[item.name])}
         >
           { item['empty-select'] && <i-option label='全部' value='' /> }
@@ -156,6 +162,7 @@ export default {
       return (
         <DatePicker
           attrs={this.mergeOption(this.dateOpt, item.props)}
+          size={this.size}
           v-model={this.params[item.name]}
           onchange={() => item.onChange && item.onChange(this.params[item.name])}
         />
@@ -163,7 +170,7 @@ export default {
     },
     renderRadio (item) {
       return (
-        <i-radio-group v-model={this.params[item.name]}>
+        <i-radio-group v-model={this.params[item.name]} size={this.size}>
           {
             item.data.map(opt => (
               <i-radio label={opt.value}>{opt.label}</i-radio>
@@ -177,12 +184,14 @@ export default {
         <div class="flex item-center">
           <i-input
             attrs={this.mergeOption(this.inputOpt, item.props)}
+            size={this.size}
             v-model={this.params[item.name][0]}
             onchange={() => item.onChange && item.onChange(this.params[item.name])}
           />
           <span style="white-space: nowrap;margin: 0 4px;">--</span>
           <i-input
             attrs={this.mergeOption(this.inputOpt, item.props)}
+            size={this.size}
             v-model={this.params[item.name][1]}
             onchange={() => item.onChange && item.onChange(this.params[item.name])}
           />
@@ -194,6 +203,7 @@ export default {
         <i-autocomplete
           style="width: 100%"
           v-model={this.params[item.name]}
+          size={this.size}
           attrs={this.mergeOption(this.autocompleteOpt, item.props)}
           onselect={data => item.onSelect && item.onSelect(data)}
           onchange={val => item.onChange && item.onChange(val)}
@@ -234,7 +244,7 @@ export default {
   },
   render () {
     return (
-      <i-form ref='form' class='form-wrap rounded' size={this.standardSize} props={this.mergeOption({ model: this.params, inline: true }, this.headOpt?.props)}>
+      <i-form ref='form' class='form-wrap rounded' props={this.mergeOption({ model: this.params, inline: true }, this.headOpt?.props)}>
         <Row gutter={10}>
           {this.data.map((item, i) => (
             <i-col
@@ -259,13 +269,13 @@ export default {
                   <i-button
                     type="primary"
                     icon="ios-search"
-                    size={this.standardSize}
+                    size={this.size}
                     onClick={this.handleQuery}
                   >查询</i-button>
                   <i-button
                     type="primary"
                     icon="md-refresh"
-                    size={this.standardSize}
+                    size={this.size}
                     onClick={this.handleReset}
                   >重置</i-button>
                   {
