@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-06 10:03:50
+ * @LastEditTime: 2021-12-06 10:39:41
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
@@ -9,7 +9,7 @@
   <div class="flex flex-col">
     <router-link to="/todo">
       <Icon type="ios-arrow-back" /> back todo
-    </router-link><br/><br/>
+    </router-link><br/>
     <render-header
       :data="header"
       :headOpt="{ props: { rules } }"
@@ -28,6 +28,9 @@
         <template v-slot:start_time="{ row }">
           {{ timeFormat(row.start_time) }}
         </template>
+        <template v-slot:end_time="{ row }">
+          {{ row.end_time ? timeFormat(row.end_time) : '-' }}
+        </template>
         <template v-slot:namespace="{ row }">
           {{ (row.namespace in namespaceMap) ? namespaceMap[row.namespace].label : '' }}
         </template>
@@ -36,10 +39,11 @@
             <render-tag :key="item" v-if="item in tagsMap" :data="tagsMap[item]" />
           </template>
         </template>
-        <template v-slot:action="{ row }">
+        <template v-slot:action="{ row, index }">
           <template v-for="(item, i) in actions">
             <span :key="i" class="act text-primary cursor-pointer" @click="item.event(row)">{{ item.label }}</span>
           </template>
+          <span v-if="!row.done" class="act text-primary cursor-pointer" @click="handleSave({ ...tableData[index], done: true, end_time: Date.now() })">完成</span>
         </template>
       </Table>
     </div>
@@ -100,6 +104,11 @@ export default {
           minWidth: 170
         },
         {
+          title: '结束时间',
+          slot: 'end_time',
+          minWidth: 170
+        },
+        {
           title: '命名空间',
           slot: 'namespace',
           minWidth: 120
@@ -112,7 +121,7 @@ export default {
         {
           title: '操作',
           slot: 'action',
-          minWidth: 105
+          minWidth: 135
         }
       ],
       tableData: [],

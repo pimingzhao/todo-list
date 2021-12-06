@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-24 09:41:19
- * @LastEditTime: 2021-11-30 10:59:43
+ * @LastEditTime: 2021-12-06 13:10:20
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -31,11 +31,11 @@ import Ui from './Ui'
 import TodoType from './TodoType'
 import Namespace from './Namespace'
 import Link from './Link'
-import Weather from './Weather'
+import WeatherTime from './WeatherTime'
 
 export default {
   name: 'Setting',
-  components: { Ui, TodoType, Namespace, Link, Weather },
+  components: { Ui, TodoType, Namespace, Link, WeatherTime },
   data () {
     return {
       menu: [
@@ -56,8 +56,8 @@ export default {
           value: 'Link'
         },
         {
-          label: '天气与时间',
-          value: 'weather'
+          label: '时间',
+          value: 'WeatherTime'
         }
       ],
       current: 'ui'

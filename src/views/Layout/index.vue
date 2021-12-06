@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 11:44:47
- * @LastEditTime: 2021-12-02 10:54:12
+ * @LastEditTime: 2021-12-06 13:07:43
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -13,6 +13,7 @@
       </Col>
       <Col :xs="24" :sm="24" :md="12" :lg="12">
         <Weather v-if="ui.showWeather" style="margin-bottom: 10px;" />
+        <time-show class="text-right" v-if="ui.showTime" :format="time.format" tag="h3" />
       </Col>
     </Row>
     <router-view class="flex-1 container overflow-y-auto" />
@@ -32,7 +33,7 @@ export default {
   name: 'Layout',
   components: { Search, Weather, Setting, ModalType },
   computed: {
-    ...mapState(['ui'])
+    ...mapState(['ui', 'time'])
   }
 }
 </script>

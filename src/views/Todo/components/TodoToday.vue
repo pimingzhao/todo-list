@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-23 10:47:18
- * @LastEditTime: 2021-12-03 10:55:31
+ * @LastEditTime: 2021-12-06 10:23:04
  * @LastEditors: pimzh
  * @Description:
 -->
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     handleStatus (todo) {
-      this.$emit('on-save', { ...todo, done: true })
+      this.$emit('on-save', { ...todo, done: true, end_time: Date.now() })
     },
     getTodos (item) {
       if (this.isDone) {
