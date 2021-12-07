@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     handleStatus (todo) {
-      this.$emit('on-save', { ...todo, done: true, end_time: Date.now() })
+      this.$emit('on-save', { ...todo, done: true, end_time: Date.now(), coast: Date.now() - todo.start_time })
     },
     getTodos (item) {
       if (this.isDone) {

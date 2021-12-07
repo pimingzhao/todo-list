@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-25 09:00:39
- * @LastEditTime: 2021-12-03 13:37:38
+ * @LastEditTime: 2021-12-07 09:30:35
  * @LastEditors: pimzh
  * @Description: Namespace
 -->
@@ -33,7 +33,7 @@
         </template>
         <template v-else>
           <Button size="small" type="primary" @click="handleSave(row, index)">保存</Button>&nbsp;
-          <Button size="small" @click="handleCancel(row, index)">取消</Button>
+          <Button size="small" @click.stop="handleCancel(row, index)">取消</Button>
         </template>
       </template>
     </Table>

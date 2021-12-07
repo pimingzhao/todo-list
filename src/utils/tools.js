@@ -80,3 +80,27 @@ export const getTimeRange = (date, days) => {
   end.setHours(23, 59, 59, 59)
   return [start, end]
 }
+
+export const getTimedate = coast => {
+  const second = 1000
+  const minute = 60 * second
+  const hour = 60 * minute
+  const day = 24 * hour
+
+  const timeMap = {
+    天: day,
+    时: hour,
+    分: minute,
+    秒: second
+  }
+  let res = ''
+  Object.keys(timeMap).forEach(k => {
+    const time = timeMap[k]
+    if (coast >= time) {
+      const times = Math.floor(coast / time)
+      coast -= times * time
+      res += times + k
+    }
+  })
+  return res
+}

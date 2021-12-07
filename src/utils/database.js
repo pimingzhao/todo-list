@@ -7,7 +7,7 @@ const baseDb = {
   version: 1,
   store: ['todo', 'tags', 'ui', 'user', 'search', 'weather', 'time', 'namespace'],
   index: {
-    todo: ['namespace', 'tags', 'start_time', 'end_time']
+    todo: ['namespace', 'tags', 'start_time', 'end_time', 'coast']
   }
 }
 

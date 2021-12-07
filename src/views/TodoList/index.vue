@@ -1,7 +1,7 @@
 <!--
  * @Author: pimzh
  * @Date: 2021-11-30 13:29:25
- * @LastEditTime: 2021-12-06 10:39:41
+ * @LastEditTime: 2021-12-07 10:33:37
  * @LastEditors: pimzh
  * @Description: TodoList
 -->
@@ -28,8 +28,8 @@
         <template v-slot:start_time="{ row }">
           {{ timeFormat(row.start_time) }}
         </template>
-        <template v-slot:end_time="{ row }">
-          {{ row.end_time ? timeFormat(row.end_time) : '-' }}
+        <template v-slot:coast="{ row }">
+          {{ row.coast ? getTimedate(row.coast) : '-' }}
         </template>
         <template v-slot:namespace="{ row }">
           {{ (row.namespace in namespaceMap) ? namespaceMap[row.namespace].label : '' }}
@@ -43,7 +43,7 @@
           <template v-for="(item, i) in actions">
             <span :key="i" class="act text-primary cursor-pointer" @click="item.event(row)">{{ item.label }}</span>
           </template>
-          <span v-if="!row.done" class="act text-primary cursor-pointer" @click="handleSave({ ...tableData[index], done: true, end_time: Date.now() })">完成</span>
+          <span v-if="!row.done" class="act text-primary cursor-pointer" @click="handleSave({ ...tableData[index], done: true, end_time: Date.now(), coast: Date.now() - row.start_time })">完成</span>
         </template>
       </Table>
     </div>
@@ -65,7 +65,7 @@
 import { mapGetters, mapState } from 'vuex'
 import ModalTodo from '@/views/Todo/components/ModalTodo'
 
-import { getTimeRange, timeFormat } from '@/utils'
+import { getTimeRange, timeFormat, getTimedate } from '@/utils'
 import { getTodoList, editTodo, delTodo } from '@/api/todo'
 export default {
   name: 'TodoList',
@@ -104,8 +104,8 @@ export default {
           minWidth: 170
         },
         {
-          title: '结束时间',
-          slot: 'end_time',
+          title: '总用时',
+          slot: 'coast',
           minWidth: 170
         },
         {
@@ -161,7 +161,6 @@ export default {
           tag: 'select',
           name: 'done',
           label: '状态',
-          value: 'false',
           data: [
             {
               label: '已完成',
@@ -217,6 +216,9 @@ export default {
     },
     timeFormat (time) {
       return timeFormat(time)
+    },
+    getTimedate (time) {
+      return getTimedate(time)
     },
     async handleSave (params) {
       await editTodo(params)

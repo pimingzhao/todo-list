@@ -2,7 +2,7 @@
  * @Author: pimzh
  * @Date: 2021-11-26 17:31:15
  * @LastEditors: pimzh
- * @LastEditTime: 2021-12-03 13:41:06
+ * @LastEditTime: 2021-12-07 09:29:52
  * @Description: file content
 -->
 <template>
@@ -36,7 +36,7 @@
         </template>
         <template v-else>
           <Button size="small" type="primary" @click="handleSave(row, index)">保存</Button>&nbsp;
-          <Button size="small" @click="handleCancel(row, index)">取消</Button>
+          <Button size="small" @click.stop="handleCancel(row, index)">取消</Button>
         </template>
       </template>
     </Table>
